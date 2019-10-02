@@ -11,8 +11,8 @@ jobs:
     - uses: actions/checkout@v1
     - name: configure
       run:  apt-get update && apt-get install -y extra-cmake-modules gettext qtbase5-dev extra-cmake-modules libkf5i18n-dev libkf5coreaddons-dev libkf5iconthemes-dev libkf5parts-dev libkf5doctools-dev libkf5crash-dev 
-    - name: cmake && male 
-      run: cmake && make
+    - name: make
+      run: make .
     - name: make check
       run: make check
     - name: make distcheck

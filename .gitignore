@@ -29,3 +29,4 @@ perf.data*
 *.BASE.*
 *.LOCAL.*
 *.REMOTE.*
+.DS_Store

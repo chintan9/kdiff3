@@ -55,7 +55,7 @@ If you want to create an install package you would run:
 6)craft --package kdiff3 or craft --target 1.8 --package kdiff3
 
 This will be a time consuming process on first run as craft will have to download all dependencies.
-KDiff3 does not require special configuration for craft. 
+KDiff3 does not require special configuration for craft.
 
 There should be an installer package generated in CraftRoot/tmp
 

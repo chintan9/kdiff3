@@ -1,5 +1,5 @@
-#include <assert.h>
 #include "progress.h"
+#include <assert.h>
 
 void ProgressDialog::delayedHide()
 {
@@ -25,14 +25,14 @@ ProgressProxy::~ProgressProxy()
 {
 }
 
-void ProgressProxy::setInformation( const QString& info, bool bRedrawUpdate )
+void ProgressProxy::setInformation(const QString& info, bool bRedrawUpdate)
 {
     /* Suppress warning about unused parameters */
     Q_UNUSED(info);
     Q_UNUSED(bRedrawUpdate);
 }
 
-void ProgressProxy::setInformation( const QString& info, int current, bool bRedrawUpdate )
+void ProgressProxy::setInformation(const QString& info, int current, bool bRedrawUpdate)
 {
     /* Suppress warning about unused parameters */
     Q_UNUSED(info);
@@ -40,33 +40,31 @@ void ProgressProxy::setInformation( const QString& info, int current, bool bRedr
     Q_UNUSED(bRedrawUpdate);
 }
 
-void ProgressProxy::setCurrent( qint64 current, bool bRedrawUpdate )
+void ProgressProxy::setCurrent(qint64 current, bool bRedrawUpdate)
 {
     /* Suppress warning about unused parameters */
     Q_UNUSED(current);
     Q_UNUSED(bRedrawUpdate);
 }
 
-void ProgressProxy::step( bool bRedrawUpdate )
+void ProgressProxy::step(bool bRedrawUpdate)
 {
     /* Suppress warning about unused parameters */
     Q_UNUSED(bRedrawUpdate);
 }
 
-void ProgressProxy::setMaxNofSteps( qint64 dMaxNofSteps )
+void ProgressProxy::setMaxNofSteps(qint64 dMaxNofSteps)
 {
     /* Suppress warning about unused parameters */
     Q_UNUSED(dMaxNofSteps);
 }
-
-
 
 bool ProgressProxy::wasCancelled()
 {
     return false;
 }
 
-void ProgressProxy::enterEventLoop( KJob* pJob, const QString& jobInfo )
+void ProgressProxy::enterEventLoop(KJob* pJob, const QString& jobInfo)
 {
     /* Suppress warning about unused parameters */
     Q_UNUSED(pJob);
@@ -83,8 +81,7 @@ void ProgressDialog::recalc(bool bUpdate)
     Q_UNUSED(bUpdate);
 }
 
-QDialog *ProgressProxy::getDialog()
+QDialog* ProgressProxy::getDialog()
 {
     return NULL;
 }
-

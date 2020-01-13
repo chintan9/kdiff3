@@ -69,13 +69,13 @@ bool FileAccess::isLocal() const
     return true;
 }
 
-bool FileAccess::readFile(void* pDestBuffer, qint64 maxLength )
+bool FileAccess::readFile(void* pDestBuffer, qint64 maxLength)
 {
     Q_UNUSED(pDestBuffer)
     Q_UNUSED(maxLength);
     return true;
 }
-bool FileAccess::writeFile(const void* pSrcBuffer, qint64 length )
+bool FileAccess::writeFile(const void* pSrcBuffer, qint64 length)
 {
     Q_UNUSED(pSrcBuffer);
     Q_UNUSED(length);
@@ -85,7 +85,7 @@ bool FileAccess::writeFile(const void* pSrcBuffer, qint64 length )
 //   bool listDir( t_DirectoryList* pDirList, bool bRecursive, bool bFindHidden,
 //                 const QString& filePattern, const QString& fileAntiPattern,
 //                 const QString& dirAntiPattern, bool bFollowDirLinks, bool bUseCvsIgnore );
-bool FileAccess::copyFile( const QString& destUrl )
+bool FileAccess::copyFile(const QString& destUrl)
 {
     Q_UNUSED(destUrl);
     return true;
@@ -101,4 +101,3 @@ bool FileAccess::removeFile()
 {
     return true;
 }
-

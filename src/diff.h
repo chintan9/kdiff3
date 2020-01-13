@@ -12,11 +12,11 @@
 #ifndef DIFF_H
 #define DIFF_H
 
+#include "LineRef.h"
+#include "Logging.h"
+#include "SourceData.h"
 #include "common.h"
 #include "fileaccess.h"
-#include "LineRef.h"
-#include "SourceData.h"
-#include "Logging.h"
 
 #include <QList>
 #include <QVector>
@@ -27,12 +27,12 @@ class Options;
 enum e_SrcSelector
 {
     Min = -1,
-    Invalid=-1,
-    None=0,
+    Invalid = -1,
+    None = 0,
     A = 1,
     B = 2,
     C = 3,
-    Max=C
+    Max = C
 };
 
 enum e_MergeDetails
@@ -45,17 +45,18 @@ enum e_MergeDetails
     eBCChangedAndEqual, // possible conflict
     eBDeleted,
     eCDeleted,
-    eBCDeleted,         // possible conflict
+    eBCDeleted, // possible conflict
 
     eBChanged_CDeleted, // conflict
     eCChanged_BDeleted, // conflict
     eBAdded,
     eCAdded,
-    eBCAdded,           // conflict
-    eBCAddedAndEqual    // possible conflict
+    eBCAdded,        // conflict
+    eBCAddedAndEqual // possible conflict
 };
 
-enum ChangeFlag {
+enum ChangeFlag
+{
     NoChange = 0,
     AChanged = 0x1,
     BChanged = 0x2,
@@ -69,13 +70,14 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(ChangeFlags);
 // Then again range of matching elements should follow.
 class Diff
 {
-private:
+  private:
     qint32 nofEquals = 0;
 
     qint64 mDiff1 = 0;
     qint64 mDiff2 = 0;
-public:
-    Diff() = default;//We use defualt initialization force compiler to generate a default constructor
+
+  public:
+    Diff() = default; //We use defualt initialization force compiler to generate a default constructor
     Diff(qint32 eq, const qint64 inDiff1, const qint64 inDiff2)
     {
         nofEquals = eq;
@@ -83,28 +85,35 @@ public:
         mDiff2 = inDiff2;
     }
 
-    inline qint32 numberOfEquals() const {
+    inline qint32 numberOfEquals() const
+    {
         return nofEquals;
     };
 
-    inline qint64 diff1() const {
+    inline qint64 diff1() const
+    {
         return mDiff1;
     };
-    inline qint64 diff2() const {
+    inline qint64 diff2() const
+    {
         return mDiff2;
     };
 
-    inline void setNumberOfEquals(const qint32 inNumOfEquals) {
+    inline void setNumberOfEquals(const qint32 inNumOfEquals)
+    {
         nofEquals = inNumOfEquals;
     }
 
-    inline void adjustNumberOfEquals(const qint64 delta) {
+    inline void adjustNumberOfEquals(const qint64 delta)
+    {
         nofEquals += delta;
     }
-    inline void adjustDiff1(const qint64 delta) {
+    inline void adjustDiff1(const qint64 delta)
+    {
         mDiff1 += delta;
     }
-    inline void adjustDiff2(const qint64 delta) {
+    inline void adjustDiff2(const qint64 delta)
+    {
         mDiff2 += delta;
     }
 };
@@ -113,17 +122,17 @@ typedef std::list<Diff> DiffList;
 
 class LineData
 {
-private:
+  private:
     QSharedPointer<QString> mBuffer;
     //QString pLine;
     QtNumberType mFirstNonWhiteChar = 0;
     qint64 mOffset = 0;
     QtNumberType mSize = 0;
-    bool bContainsPureComment = false;//TODO: Move me
+    bool bContainsPureComment = false; //TODO: Move me
 
-public:
+  public:
     explicit LineData() = default; // needed for Qt internal reasons should not be used.
-    inline LineData(const QSharedPointer<QString> &buffer, const qint64 inOffset, QtNumberType inSize = 0, QtNumberType inFirstNonWhiteChar=0, bool inIsPureComment=false)
+    inline LineData(const QSharedPointer<QString>& buffer, const qint64 inOffset, QtNumberType inSize = 0, QtNumberType inFirstNonWhiteChar = 0, bool inIsPureComment = false)
     {
         mBuffer = buffer;
         mOffset = inOffset;
@@ -131,36 +140,44 @@ public:
         bContainsPureComment = inIsPureComment;
         mFirstNonWhiteChar = inFirstNonWhiteChar;
     }
-    Q_REQUIRED_RESULT inline int size() const {
+    Q_REQUIRED_RESULT inline int size() const
+    {
         return mSize;
     }
-    Q_REQUIRED_RESULT inline qint32 getFirstNonWhiteChar() const {
+    Q_REQUIRED_RESULT inline qint32 getFirstNonWhiteChar() const
+    {
         return mFirstNonWhiteChar;
     }
 
     /*
         QString::fromRawData allows us to create a light weight QString backed by the buffer memmory.
     */
-    Q_REQUIRED_RESULT inline const QString getLine() const {
+    Q_REQUIRED_RESULT inline const QString getLine() const
+    {
         return QString::fromRawData(mBuffer->data() + mOffset, mSize);
     }
-    Q_REQUIRED_RESULT inline const QSharedPointer<QString>& getBuffer() const {
+    Q_REQUIRED_RESULT inline const QSharedPointer<QString>& getBuffer() const
+    {
         return mBuffer;
     }
 
-    Q_REQUIRED_RESULT inline qint64 getOffset() const {
+    Q_REQUIRED_RESULT inline qint64 getOffset() const
+    {
         return mOffset;
     }
     Q_REQUIRED_RESULT int width(int tabSize) const; // Calcs width considering tabs.
     //int occurrences;
-    inline bool whiteLine() const {
+    inline bool whiteLine() const
+    {
         return mFirstNonWhiteChar == mSize - 1;
     }
 
-    inline bool isPureComment() const {
+    inline bool isPureComment() const
+    {
         return bContainsPureComment;
     }
-    inline void setPureComment(const bool bPureComment) {
+    inline void setPureComment(const bool bPureComment)
+    {
         bContainsPureComment = bPureComment;
     }
 
@@ -174,7 +191,7 @@ class Diff3LineVector;
 
 class DiffBufferInfo
 {
-private:
+  private:
     const QVector<LineData>* mLineDataA;
     const QVector<LineData>* mLineDataB;
     const QVector<LineData>* mLineDataC;
@@ -184,7 +201,8 @@ private:
     LineCount m_sizeC;
     const Diff3LineList* m_pDiff3LineList;
     const Diff3LineVector* m_pDiff3LineVector;
-public:
+
+  public:
     void init(Diff3LineList* d3ll, const Diff3LineVector* d3lv,
               const QVector<LineData>* pldA, LineCount sizeA, const QVector<LineData>* pldB, LineCount sizeB, const QVector<LineData>* pldC, LineCount sizeC);
 
@@ -192,21 +210,21 @@ public:
     {
         switch(srcIndex)
         {
-        case A:
-            return mLineDataA;
-        case B:
-            return mLineDataB;
-        case C:
-            return mLineDataC;
-        default:
-            return nullptr;
+            case A:
+                return mLineDataA;
+            case B:
+                return mLineDataB;
+            case C:
+                return mLineDataC;
+            default:
+                return nullptr;
         }
     }
 };
 
 class Diff3Line
 {
-private:
+  private:
     friend class Diff3LineList;
     LineRef lineA;
     LineRef lineB;
@@ -218,17 +236,16 @@ private:
 
     bool bWhiteLineA = false;
     bool bWhiteLineB = false;
-    bool bWhiteLineC  = false;
+    bool bWhiteLineC = false;
 
     DiffList* pFineAB = nullptr; // These are NULL only if completely equal or if either source doesn't exist.
     DiffList* pFineBC = nullptr;
     DiffList* pFineCA = nullptr;
 
-
     qint32 mLinesNeededForDisplay = 1;    // Due to wordwrap
     qint32 mSumLinesNeededForDisplay = 0; // For fast conversion to m_diff3WrapLineVector
 
-public:
+  public:
     static QSharedPointer<DiffBufferInfo> m_pDiffBufferInfo; // For convenience
 
     ~Diff3Line()
@@ -240,33 +257,42 @@ public:
         pFineBC = nullptr;
         pFineCA = nullptr;
     }
-    LineRef getLineA() const {
+    LineRef getLineA() const
+    {
         return lineA;
     }
-    LineRef getLineB() const {
+    LineRef getLineB() const
+    {
         return lineB;
     }
-    LineRef getLineC() const {
+    LineRef getLineC() const
+    {
         return lineC;
     }
 
-    inline void setLineA(const LineRef& line) {
+    inline void setLineA(const LineRef& line)
+    {
         lineA = line;
     }
-    inline void setLineB(const LineRef& line) {
+    inline void setLineB(const LineRef& line)
+    {
         lineB = line;
     }
-    inline void setLineC(const LineRef& line) {
+    inline void setLineC(const LineRef& line)
+    {
         lineC = line;
     }
 
-    inline bool isEqualAB() const {
+    inline bool isEqualAB() const
+    {
         return bAEqB;
     }
-    inline bool isEqualAC() const {
+    inline bool isEqualAC() const
+    {
         return bAEqC;
     }
-    inline bool isEqualBC() const {
+    inline bool isEqualBC() const
+    {
         return bBEqC;
     }
 
@@ -276,16 +302,16 @@ public:
 
         switch(src)
         {
-        case A:
-            return bWhiteLineA;
-        case B:
-            return bWhiteLineB;
-        case C:
-            return bWhiteLineC;
-        default:
-            //should never get here
-            Q_ASSERT(false);
-            return false;
+            case A:
+                return bWhiteLineA;
+            case B:
+                return bWhiteLineB;
+            case C:
+                return bWhiteLineC;
+            default:
+                //should never get here
+                Q_ASSERT(false);
+                return false;
         }
     }
 
@@ -320,15 +346,18 @@ public:
         return -1;
     }
 
-    inline qint32 sumLinesNeededForDisplay() const {
+    inline qint32 sumLinesNeededForDisplay() const
+    {
         return mSumLinesNeededForDisplay;
     }
 
-    inline qint32 linesNeededForDisplay() const {
+    inline qint32 linesNeededForDisplay() const
+    {
         return mLinesNeededForDisplay;
     }
 
-    void setLinesNeeded(const qint32 lines) {
+    void setLinesNeeded(const qint32 lines)
+    {
         mLinesNeededForDisplay = lines;
     }
     bool fineDiff(bool bTextsTotalEqual, const e_SrcSelector selector, const QVector<LineData>* v1, const QVector<LineData>* v2);
@@ -337,7 +366,8 @@ public:
     void getLineInfo(const e_SrcSelector winIdx, const bool isTriple, LineRef& lineIdx,
                      DiffList*& pFineDiff1, DiffList*& pFineDiff2, // return values
                      ChangeFlags& changed, ChangeFlags& changed2) const;
-private:
+
+  private:
     void setFineDiff(const e_SrcSelector selector, DiffList* pDiffList)
     {
         Q_ASSERT(selector == A || selector == B || selector == C);
@@ -364,7 +394,7 @@ private:
 
 class Diff3LineList : public std::list<Diff3Line>
 {
-public:
+  public:
     void findHistoryRange(const QRegExp& historyStart, bool bThreeFiles,
                           Diff3LineList::const_iterator& iBegin, Diff3LineList::const_iterator& iEnd, int& idxBegin, int& idxEnd) const;
     bool fineDiff(const e_SrcSelector selector, const QVector<LineData>* v1, const QVector<LineData>* v2);
@@ -379,12 +409,11 @@ public:
 
     void calcDiff3LineListTrim(const QVector<LineData>* pldA, const QVector<LineData>* pldB, const QVector<LineData>* pldC, ManualDiffHelpList* pManualDiffHelpList);
 
-
     LineCount recalcWordWrap(bool resetDisplayCount)
     {
         LineCount sumOfLines = 0;
 
-        for(Diff3Line& d3l: *this)
+        for(Diff3Line& d3l : *this)
         {
             if(resetDisplayCount)
                 d3l.mLinesNeededForDisplay = 1;
@@ -399,7 +428,7 @@ public:
     //TODO: Add safety guards to prevent list from getting too large. Same problem as with QLinkedList.
     qint32 size() const
     {
-        if(std::list<Diff3Line>::size() > (size_t)TYPE_MAX(qint32))//explicit cast to silence gcc
+        if(std::list<Diff3Line>::size() > (size_t)TYPE_MAX(qint32)) //explicit cast to silence gcc
         {
             qCDebug(kdiffMain) << "Diff3Line: List too large. size=" << std::list<Diff3Line>::size();
             Q_ASSERT(false); //Unsupported size
@@ -436,8 +465,7 @@ class Diff3LineVector : public QVector<Diff3Line*>
 {
 };
 
-struct Diff3WrapLine
-{
+struct Diff3WrapLine {
     Diff3Line* pD3L;
     int diff3LineIndex;
     int wrapLineOffset;
@@ -448,7 +476,7 @@ typedef QVector<Diff3WrapLine> Diff3WrapLineVector;
 
 class TotalDiffStatus
 {
-public:
+  public:
     inline void reset()
     {
         bBinaryAEqC = false;
@@ -462,38 +490,48 @@ public:
         nofWhitespaceConflicts = 0;
     }
 
-    inline int getUnsolvedConflicts() const {
+    inline int getUnsolvedConflicts() const
+    {
         return nofUnsolvedConflicts;
     }
-    inline void setUnsolvedConflicts(const int unsolved) {
+    inline void setUnsolvedConflicts(const int unsolved)
+    {
         nofUnsolvedConflicts = unsolved;
     }
 
-    inline int getSolvedConflicts() const {
+    inline int getSolvedConflicts() const
+    {
         return nofSolvedConflicts;
     }
-    inline void setSolvedConflicts(const int solved) {
+    inline void setSolvedConflicts(const int solved)
+    {
         nofSolvedConflicts = solved;
     }
 
-    inline int getWhitespaceConflicts() const {
+    inline int getWhitespaceConflicts() const
+    {
         return nofWhitespaceConflicts;
     }
-    inline void setWhitespaceConflicts(const int wintespace) {
+    inline void setWhitespaceConflicts(const int wintespace)
+    {
         nofWhitespaceConflicts = wintespace;
     }
 
-    inline int getNonWhitespaceConflicts() const {
+    inline int getNonWhitespaceConflicts() const
+    {
         return getUnsolvedConflicts() + getSolvedConflicts() - getWhitespaceConflicts();
     }
 
-    bool isBinaryEqualAC() const {
+    bool isBinaryEqualAC() const
+    {
         return bBinaryAEqC;
     }
-    bool isBinaryEqualBC() const {
+    bool isBinaryEqualBC() const
+    {
         return bBinaryBEqC;
     }
-    bool isBinaryEqualAB() const {
+    bool isBinaryEqualAB() const
+    {
         return bBinaryAEqB;
     }
 
@@ -505,7 +543,7 @@ public:
     bool bTextBEqC = false;
     bool bTextAEqB = false;
 
-private:
+  private:
     int nofUnsolvedConflicts = 0;
     int nofSolvedConflicts = 0;
     int nofWhitespaceConflicts = 0;
@@ -514,7 +552,7 @@ private:
 // Three corresponding ranges. (Minimum size of a valid range is one line.)
 class ManualDiffHelpEntry
 {
-private:
+  private:
     LineRef lineA1;
     LineRef lineA2;
     LineRef lineB1;
@@ -522,7 +560,7 @@ private:
     LineRef lineC1;
     LineRef lineC2;
 
-public:
+  public:
     LineRef& firstLine(e_SrcSelector winIdx)
     {
         return winIdx == A ? lineA1 : (winIdx == B ? lineB1 : lineC1);
@@ -543,43 +581,49 @@ public:
 
     int calcManualDiffFirstDiff3LineIdx(const Diff3LineVector& d3lv);
 
-    void getRangeForUI(const e_SrcSelector winIdx, LineRef *rangeLine1, LineRef *rangeLine2) const {
-        if(winIdx == A) {
+    void getRangeForUI(const e_SrcSelector winIdx, LineRef* rangeLine1, LineRef* rangeLine2) const
+    {
+        if(winIdx == A)
+        {
             *rangeLine1 = lineA1;
             *rangeLine2 = lineA2;
         }
-        if(winIdx == B) {
+        if(winIdx == B)
+        {
             *rangeLine1 = lineB1;
             *rangeLine2 = lineB2;
         }
-        if(winIdx == C) {
+        if(winIdx == C)
+        {
             *rangeLine1 = lineC1;
             *rangeLine2 = lineC2;
         }
     }
 
-    inline const LineRef& getLine1(const e_SrcSelector winIdx) const {
+    inline const LineRef& getLine1(const e_SrcSelector winIdx) const
+    {
         return winIdx == A ? lineA1 : winIdx == B ? lineB1 : lineC1;
     }
-    inline const LineRef& getLine2(const e_SrcSelector winIdx) const {
+    inline const LineRef& getLine2(const e_SrcSelector winIdx) const
+    {
         return winIdx == A ? lineA2 : winIdx == B ? lineB2 : lineC2;
     }
     bool isValidMove(int line1, int line2, e_SrcSelector winIdx1, e_SrcSelector winIdx2) const;
 };
 
 // A list of corresponding ranges
-class ManualDiffHelpList: public std::list<ManualDiffHelpEntry>
+class ManualDiffHelpList : public std::list<ManualDiffHelpEntry>
 {
-public:
+  public:
     bool isValidMove(int line1, int line2, e_SrcSelector winIdx1, e_SrcSelector winIdx2) const;
     void insertEntry(e_SrcSelector winIdx, LineRef firstLine, LineRef lastLine);
 
     bool runDiff(const QVector<LineData>* p1, LineRef size1, const QVector<LineData>* p2, LineRef size2, DiffList& diffList,
                  e_SrcSelector winIdx1, e_SrcSelector winIdx2,
-                 const QSharedPointer<Options> &pOptions);
+                 const QSharedPointer<Options>& pOptions);
 };
 
-void calcDiff(const QString &line1, const QString &line2, DiffList& diffList, int match, int maxSearchRange);
+void calcDiff(const QString& line1, const QString& line2, DiffList& diffList, int match, int maxSearchRange);
 
 inline bool isWhite(QChar c)
 {

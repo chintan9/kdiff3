@@ -22,11 +22,11 @@
 
 #include <KLocalizedString>
 
-#include <QString>
-#include <QStringList>
 #include <QHash>
 #include <QRegExp>
 #include <QRegularExpression>
+#include <QString>
+#include <QStringList>
 
 /* Split the command line into arguments.
  * Normally split at white space separators except when quoting with " or '.
@@ -168,7 +168,7 @@ QString Utils::calcHistoryLead(const QString& s)
 
     i = s.indexOf(QRegularExpression("\\s"), i);
     if(Q_UNLIKELY(i == -1))
-        return s;// Very unlikely
+        return s; // Very unlikely
 
     return s.left(i);
 }

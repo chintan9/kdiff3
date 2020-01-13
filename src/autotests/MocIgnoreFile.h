@@ -29,33 +29,41 @@ typedef std::list<FileAccess> t_DirectoryList;
 
 class MocIgnoreFile
 {
-public:
-    void mocSetPath(const QString& path) {
+  public:
+    void mocSetPath(const QString& path)
+    {
         mPath = path;
     }
-    void mocSetIsLocal(bool local) {
+    void mocSetIsLocal(bool local)
+    {
         mLocal = local;
     }
 
-    void addPath(const QString& txt) {
+    void addPath(const QString& txt)
+    {
         Q_UNUSED(txt);
     }
-    QString absoluteFilePath() const {
+    QString absoluteFilePath() const
+    {
         return mPath;
     }
 
-    bool createLocalCopy() {
+    bool createLocalCopy()
+    {
         return true;
     }
 
-    bool isLocal() const {
+    bool isLocal() const
+    {
         return mLocal;
     }
 
-    bool exists() const {
+    bool exists() const
+    {
         return mExists;
     }
-    QString getTempName() const {
+    QString getTempName() const
+    {
         return mPath;
     }
 
@@ -65,7 +73,7 @@ public:
         return ".cvsignore";
     }
 
-private:
+  private:
     QString mPath = "/test/ui/.cvsignore";
     bool mLocal = true, mExists = true;
 };

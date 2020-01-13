@@ -21,7 +21,6 @@ ManualDiffHelpList m_manualDiffHelpList;
 bool g_bIgnoreWhiteSpace = true;
 bool g_bIgnoreTrivialMatches = true;
 
-
 void printDiffList(const QString caption, const DiffList &diffList)
 {
     QTextStream out(stdout);
@@ -40,19 +39,19 @@ void printDiff3List(const Diff3LineList &diff3LineList,
                     const SourceData &sd1,
                     const SourceData &sd2,
                     const SourceData &sd3,
-                    bool forceVerbosity=false)
+                    bool forceVerbosity = false)
 {
     const int columnsize = 30;
     const int linenumsize = 6;
     Diff3LineList::const_iterator i;
-    for ( i=diff3LineList.begin(); i!=diff3LineList.end(); ++i )
+    for(i = diff3LineList.begin(); i != diff3LineList.end(); ++i)
     {
         QTextStream out(stdout);
         QString lineAText;
         QString lineBText;
         QString lineCText;
 
-        const Diff3Line& d3l = *i;
+        const Diff3Line &d3l = *i;
 
         if(d3l.getLineA().isValid())
         {
@@ -81,9 +80,7 @@ void printDiff3List(const Diff3LineList &diff3LineList,
             lineCText = QString("%1 %2").arg(d3l.getLineC(), linenumsize).arg(lineCText.left(columnsize - linenumsize - 1));
         }
 
-        out << QString("%1 %2 %3").arg(lineAText, -columnsize)
-            .arg(lineBText, -columnsize)
-            .arg(lineCText, -columnsize);
+        out << QString("%1 %2 %3").arg(lineAText, -columnsize).arg(lineBText, -columnsize).arg(lineCText, -columnsize);
         if(verbose || forceVerbosity)
         {
             out << " " << d3l.isEqualAB() << " " << d3l.isEqualBC() << " " << d3l.isEqualAC();
@@ -98,7 +95,7 @@ void printDiff3List(QString caption,
                     const SourceData &sd1,
                     const SourceData &sd2,
                     const SourceData &sd3,
-                    bool forceVerbosity=false)
+                    bool forceVerbosity = false)
 {
     QTextStream out(stdout);
     out << "Printing diff3list " << caption << ":" << endl;
@@ -114,50 +111,50 @@ void determineFileAlignment(SourceData &m_sd1, SourceData &m_sd2, SourceData &m_
     m_diff3LineList.clear();
 
     // Run the diff.
-    if ( m_sd3.isEmpty() )
+    if(m_sd3.isEmpty())
     {
-        m_manualDiffHelpList.runDiff( m_sd1.getLineDataForDiff(), m_sd1.getSizeLines(), m_sd2.getLineDataForDiff(), m_sd2.getSizeLines(), m_diffList12,A,B,
-                                      m_pOptions);
-        m_diff3LineList.calcDiff3LineListUsingAB( &m_diffList12);
-        m_diff3LineList.fineDiff(A, m_sd1.getLineDataForDisplay(), m_sd2.getLineDataForDisplay() );
+        m_manualDiffHelpList.runDiff(m_sd1.getLineDataForDiff(), m_sd1.getSizeLines(), m_sd2.getLineDataForDiff(), m_sd2.getSizeLines(), m_diffList12, A, B,
+                                     m_pOptions);
+        m_diff3LineList.calcDiff3LineListUsingAB(&m_diffList12);
+        m_diff3LineList.fineDiff(A, m_sd1.getLineDataForDisplay(), m_sd2.getLineDataForDisplay());
     }
     else
     {
-        m_manualDiffHelpList.runDiff( m_sd1.getLineDataForDiff(), m_sd1.getSizeLines(), m_sd2.getLineDataForDiff(), m_sd2.getSizeLines(), m_diffList12,A,B, m_pOptions);
-        m_manualDiffHelpList.runDiff( m_sd2.getLineDataForDiff(), m_sd2.getSizeLines(), m_sd3.getLineDataForDiff(), m_sd3.getSizeLines(), m_diffList23,B,C, m_pOptions);
-        m_manualDiffHelpList.runDiff( m_sd1.getLineDataForDiff(), m_sd1.getSizeLines(), m_sd3.getLineDataForDiff(), m_sd3.getSizeLines(), m_diffList13,A,C, m_pOptions);
+        m_manualDiffHelpList.runDiff(m_sd1.getLineDataForDiff(), m_sd1.getSizeLines(), m_sd2.getLineDataForDiff(), m_sd2.getSizeLines(), m_diffList12, A, B, m_pOptions);
+        m_manualDiffHelpList.runDiff(m_sd2.getLineDataForDiff(), m_sd2.getSizeLines(), m_sd3.getLineDataForDiff(), m_sd3.getSizeLines(), m_diffList23, B, C, m_pOptions);
+        m_manualDiffHelpList.runDiff(m_sd1.getLineDataForDiff(), m_sd1.getSizeLines(), m_sd3.getLineDataForDiff(), m_sd3.getSizeLines(), m_diffList13, A, C, m_pOptions);
 
-        if (verbose)
+        if(verbose)
         {
             printDiffList("m_diffList12", m_diffList12);
             printDiffList("m_diffList23", m_diffList23);
             printDiffList("m_diffList13", m_diffList13);
         }
 
-        m_diff3LineList.calcDiff3LineListUsingAB( &m_diffList12);
-        if (verbose) printDiff3List("after calcDiff3LineListUsingAB", m_diff3LineList, m_sd1, m_sd2, m_sd3);
+        m_diff3LineList.calcDiff3LineListUsingAB(&m_diffList12);
+        if(verbose) printDiff3List("after calcDiff3LineListUsingAB", m_diff3LineList, m_sd1, m_sd2, m_sd3);
 
-        m_diff3LineList.calcDiff3LineListUsingAC( &m_diffList13);
-        if (verbose) printDiff3List("after calcDiff3LineListUsingAC", m_diff3LineList, m_sd1, m_sd2, m_sd3);
+        m_diff3LineList.calcDiff3LineListUsingAC(&m_diffList13);
+        if(verbose) printDiff3List("after calcDiff3LineListUsingAC", m_diff3LineList, m_sd1, m_sd2, m_sd3);
 
-        m_diff3LineList.correctManualDiffAlignment(&m_manualDiffHelpList );
-        m_diff3LineList.calcDiff3LineListTrim(m_sd1.getLineDataForDiff(), m_sd2.getLineDataForDiff(), m_sd3.getLineDataForDiff(), &m_manualDiffHelpList );
-        if (verbose) printDiff3List("after 1st calcDiff3LineListTrim", m_diff3LineList, m_sd1, m_sd2, m_sd3);
+        m_diff3LineList.correctManualDiffAlignment(&m_manualDiffHelpList);
+        m_diff3LineList.calcDiff3LineListTrim(m_sd1.getLineDataForDiff(), m_sd2.getLineDataForDiff(), m_sd3.getLineDataForDiff(), &m_manualDiffHelpList);
+        if(verbose) printDiff3List("after 1st calcDiff3LineListTrim", m_diff3LineList, m_sd1, m_sd2, m_sd3);
 
-        if ( m_pOptions->m_bDiff3AlignBC )
+        if(m_pOptions->m_bDiff3AlignBC)
         {
-            m_diff3LineList.calcDiff3LineListUsingBC( &m_diffList23);
-            if (verbose) printDiff3List("after calcDiff3LineListUsingBC", m_diff3LineList, m_sd1, m_sd2, m_sd3);
-            m_diff3LineList.correctManualDiffAlignment( &m_manualDiffHelpList );
-            m_diff3LineList.calcDiff3LineListTrim(m_sd1.getLineDataForDiff(), m_sd2.getLineDataForDiff(), m_sd3.getLineDataForDiff(), &m_manualDiffHelpList );
-            if (verbose) printDiff3List("after 2nd calcDiff3LineListTrim", m_diff3LineList, m_sd1, m_sd2, m_sd3);
+            m_diff3LineList.calcDiff3LineListUsingBC(&m_diffList23);
+            if(verbose) printDiff3List("after calcDiff3LineListUsingBC", m_diff3LineList, m_sd1, m_sd2, m_sd3);
+            m_diff3LineList.correctManualDiffAlignment(&m_manualDiffHelpList);
+            m_diff3LineList.calcDiff3LineListTrim(m_sd1.getLineDataForDiff(), m_sd2.getLineDataForDiff(), m_sd3.getLineDataForDiff(), &m_manualDiffHelpList);
+            if(verbose) printDiff3List("after 2nd calcDiff3LineListTrim", m_diff3LineList, m_sd1, m_sd2, m_sd3);
         }
 
-        m_diff3LineList.fineDiff(A, m_sd1.getLineDataForDisplay(), m_sd2.getLineDataForDisplay() );
-        m_diff3LineList.fineDiff(B, m_sd2.getLineDataForDisplay(), m_sd3.getLineDataForDisplay() );
-        m_diff3LineList.fineDiff(C, m_sd3.getLineDataForDisplay(), m_sd1.getLineDataForDisplay() );
+        m_diff3LineList.fineDiff(A, m_sd1.getLineDataForDisplay(), m_sd2.getLineDataForDisplay());
+        m_diff3LineList.fineDiff(B, m_sd2.getLineDataForDisplay(), m_sd3.getLineDataForDisplay());
+        m_diff3LineList.fineDiff(C, m_sd3.getLineDataForDisplay(), m_sd1.getLineDataForDisplay());
     }
-    m_diff3LineList.calcWhiteDiff3Lines( m_sd1.getLineDataForDiff(), m_sd2.getLineDataForDiff(), m_sd3.getLineDataForDiff() );
+    m_diff3LineList.calcWhiteDiff3Lines(m_sd1.getLineDataForDiff(), m_sd2.getLineDataForDiff(), m_sd3.getLineDataForDiff());
 }
 
 QString getLineFromSourceData(const SourceData &sd, int line)
@@ -169,7 +166,6 @@ QString getLineFromSourceData(const SourceData &sd, int line)
     return lineText;
 }
 
-
 void loadExpectedAlignmentFile(QString expectedResultFileName, Diff3LineList &expectedDiff3LineList)
 {
     Diff3Line d3l;
@@ -178,17 +174,17 @@ void loadExpectedAlignmentFile(QString expectedResultFileName, Diff3LineList &ex
 
     QFile file(expectedResultFileName);
     QString line;
-    if ( file.open(QIODevice::ReadOnly) )
+    if(file.open(QIODevice::ReadOnly))
     {
-        QTextStream t( &file );
-        while ( !t.atEnd() )
+        QTextStream t(&file);
+        while(!t.atEnd())
         {
             QStringList lst = t.readLine().split(QRegExp("\\s+"));
             d3l.setLineA(lst.at(0).toInt());
             d3l.setLineB(lst.at(1).toInt());
             d3l.setLineC(lst.at(2).toInt());
 
-            expectedDiff3LineList.push_back( d3l );
+            expectedDiff3LineList.push_back(d3l);
         }
         file.close();
     }
@@ -199,10 +195,10 @@ void writeActualAlignmentFile(QString actualResultFileName, const Diff3LineList 
     Diff3LineList::const_iterator p_d3l;
 
     QFile file(actualResultFileName);
-    if ( file.open(QIODevice::WriteOnly) )
+    if(file.open(QIODevice::WriteOnly))
     {
         {
-            QTextStream t( &file );
+            QTextStream t(&file);
 
             for(p_d3l = actualDiff3LineList.begin(); p_d3l != actualDiff3LineList.end(); p_d3l++)
             {
@@ -236,7 +232,7 @@ bool dataIsConsistent(int line1, QString &line1Text, int line2, QString &line2Te
         {
             consistent = (line1Text == line2Text);
         }
-        else if (line1Text != line2Text)
+        else if(line1Text != line2Text)
         {
             consistent = !equal;
         }
@@ -244,7 +240,6 @@ bool dataIsConsistent(int line1, QString &line1Text, int line2, QString &line2Te
         {
             consistent = true;
         }
-
     }
     return consistent;
 }
@@ -404,7 +399,6 @@ bool runTest(QString file1, QString file2, QString file3, QString expectedResult
     return equal;
 }
 
-
 QStringList gettestdatafiles(QString testdir)
 {
     QStringList baseFilePaths;
@@ -422,11 +416,10 @@ QStringList gettestdatafiles(QString testdir)
     }
     out << testdir << ": " << baseFilePaths.size() << " files" << endl;
 
-
     QStringList subdirs = testdatadir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
     QListIterator<QString> dir_it(subdirs);
 
-    while (dir_it.hasNext())
+    while(dir_it.hasNext())
     {
         QString subdir = dir_it.next();
         QStringList subdirBaseFilePaths = gettestdatafiles(testdir + "/" + subdir);
@@ -436,7 +429,6 @@ QStringList gettestdatafiles(QString testdir)
 
     return baseFilePaths;
 }
-
 
 int main(int argc, char *argv[])
 {
@@ -454,13 +446,13 @@ int main(int argc, char *argv[])
     QStringList baseFiles = gettestdatafiles("testdata");
     QListIterator<QString> it(baseFiles);
 
-    for (int i = 0; i < baseFiles.size(); i++)
+    for(int i = 0; i < baseFiles.size(); i++)
     {
         maxLength = std::max(baseFiles.at(i).length(), maxLength);
     }
     maxLength += testdatadir.path().length() + 1;
 
-    while (it.hasNext())
+    while(it.hasNext())
     {
         QString fileName = it.next();
 
@@ -476,8 +468,8 @@ int main(int argc, char *argv[])
         QString actualResultFileName(prefix + "_actual_result." + suffix);
 
         if(QFile(contrib1FileName).exists() &&
-                QFile(contrib2FileName).exists() &&
-                QFile(expectedResultFileName).exists())
+           QFile(contrib2FileName).exists() &&
+           QFile(expectedResultFileName).exists())
         {
             bool ok = runTest(fileName, contrib1FileName, contrib2FileName, expectedResultFileName, actualResultFileName, maxLength);
 

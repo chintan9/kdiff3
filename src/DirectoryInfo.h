@@ -24,8 +24,8 @@
 
 class DirectoryInfo
 {
-public:
-    explicit DirectoryInfo() {};
+  public:
+    explicit DirectoryInfo(){};
     DirectoryInfo(FileAccess& dirA, FileAccess& dirB, FileAccess& dirC, FileAccess& dirDest)
     {
         m_dirA = dirA;
@@ -38,13 +38,16 @@ public:
         m_dirListC.clear();
     }
 
-    inline FileAccess dirA() const {
+    inline FileAccess dirA() const
+    {
         return m_dirA;
     }
-    inline FileAccess dirB() const {
+    inline FileAccess dirB() const
+    {
         return m_dirB;
     }
-    inline FileAccess dirC() const {
+    inline FileAccess dirC() const
+    {
         return m_dirC;
     }
     inline FileAccess destDir() const
@@ -55,7 +58,8 @@ public:
             return m_dirC.isValid() ? m_dirC : m_dirB;
     }
 
-    inline bool allowSyncMode() {
+    inline bool allowSyncMode()
+    {
         return !m_dirC.isValid() && !m_dirDest.isValid();
     }
 
@@ -86,17 +90,20 @@ public:
                               options.m_bDmUseCvsIgnore);
     }
 
-    t_DirectoryList& getDirListA() {
+    t_DirectoryList& getDirListA()
+    {
         return m_dirListA;
     }
-    t_DirectoryList& getDirListB() {
+    t_DirectoryList& getDirListB()
+    {
         return m_dirListB;
     }
-    t_DirectoryList& getDirListC() {
+    t_DirectoryList& getDirListC()
+    {
         return m_dirListC;
     }
 
-private:
+  private:
     FileAccess m_dirA, m_dirB, m_dirC;
 
     t_DirectoryList m_dirListA;

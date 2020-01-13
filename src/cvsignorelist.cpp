@@ -20,8 +20,8 @@
 void CvsIgnoreList::init(FileAccess& dir, const t_DirectoryList* pDirList)
 {
     static const QString ignorestr = QString::fromLatin1(". .. core RCSLOG tags TAGS RCS SCCS .make.state "
-                                     ".nse_depinfo #* .#* cvslog.* ,* CVS CVS.adm .del-* *.a *.olb *.o *.obj "
-                                     "*.so *.Z *~ *.old *.elc *.ln *.bak *.BAK *.orig *.rej *.exe _$* *$");
+                                                         ".nse_depinfo #* .#* cvslog.* ,* CVS CVS.adm .del-* *.a *.olb *.o *.obj "
+                                                         "*.so *.Z *~ *.old *.elc *.ln *.bak *.BAK *.orig *.rej *.exe _$* *$");
 
     constexpr char varname[] = "CVSIGNORE";
 
@@ -141,8 +141,7 @@ bool CvsIgnoreList::matches(const QString& text, bool bCaseSensitive) const
         return true;
     }
 
-
-    for(const QString& startPattern: m_startPatterns)
+    for(const QString& startPattern : m_startPatterns)
     {
         if(text.startsWith(startPattern, bCaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive))
         {
@@ -150,7 +149,7 @@ bool CvsIgnoreList::matches(const QString& text, bool bCaseSensitive) const
         }
     }
 
-    for(const QString& endPattern: m_endPatterns)
+    for(const QString& endPattern : m_endPatterns)
     {
         if(text.endsWith(endPattern, bCaseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive))
         {

@@ -165,10 +165,10 @@ QString Utils::calcHistoryLead(const QString& s)
     int i = s.indexOf(QRegularExpression("\\S"));
     if(i == -1)
         return QString("");
-    
+
     i = s.indexOf(QRegularExpression("\\s"), i);
     if(Q_UNLIKELY(i == -1))
         return s;// Very unlikely
-    
+
     return s.left(i);
 }

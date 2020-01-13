@@ -8,9 +8,9 @@ FileAccess::FileAccess()
 
 FileAccess::FileAccess(const QString& name, bool bWantToWrite)
 {
-  Q_ASSERT(!bWantToWrite);
+    Q_ASSERT(!bWantToWrite);
 
-  m_name = name;
+    m_name = name;
 }
 
 FileAccess::~FileAccess()
@@ -22,7 +22,7 @@ FileAccess::~FileAccess()
 //
 bool FileAccess::isValid() const
 {
-  return m_name.length() != 0;
+    return m_name.length() != 0;
 }
 
 //   bool isFile() const;
@@ -61,12 +61,12 @@ QString FileAccess::prettyAbsPath() const
 //   KUrl url() const;
 QString FileAccess::absoluteFilePath() const
 {
-  return "";
+    return "";
 }
 
 bool FileAccess::isLocal() const
 {
-  return true;
+    return true;
 }
 
 bool FileAccess::readFile(void* pDestBuffer, qint64 maxLength )

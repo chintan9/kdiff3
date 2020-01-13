@@ -165,7 +165,7 @@ void MergeResultWindow::init(
 //At that point in startup we don't have a MergeResultWindow object so we cannot connect the signals yet.
 void MergeResultWindow::initActions(KActionCollection* ac)
 {
-    if(ac == nullptr){
+    if(ac == nullptr) {
         KMessageBox::error(nullptr, "actionCollection==0");
         exit(-1);//we cannot recover from this.
     }
@@ -415,8 +415,8 @@ bool MergeResultWindow::sameKindCheck(const MergeLine& ml1, const MergeLine& ml2
     }
     else
         return (
-            (!ml1.bConflict && !ml2.bConflict && ml1.bDelta && ml2.bDelta && ml1.srcSelect == ml2.srcSelect && (ml1.mergeDetails == ml2.mergeDetails || (ml1.mergeDetails != eBCAddedAndEqual && ml2.mergeDetails != eBCAddedAndEqual))) ||
-            (!ml1.bDelta && !ml2.bDelta));
+                   (!ml1.bConflict && !ml2.bConflict && ml1.bDelta && ml2.bDelta && ml1.srcSelect == ml2.srcSelect && (ml1.mergeDetails == ml2.mergeDetails || (ml1.mergeDetails != eBCAddedAndEqual && ml2.mergeDetails != eBCAddedAndEqual))) ||
+                   (!ml1.bDelta && !ml2.bDelta));
 }
 
 void MergeResultWindow::merge(bool bAutoSolve, e_SrcSelector defaultSelector, bool bConflictsOnly, bool bWhiteSpaceOnly)
@@ -427,7 +427,7 @@ void MergeResultWindow::merge(bool bAutoSolve, e_SrcSelector defaultSelector, bo
         {
             int result = KMessageBox::warningYesNo(this,
                                                    i18n("The output has been modified.\n"
-                                                        "If you continue your changes will be lost."),
+                                                           "If you continue your changes will be lost."),
                                                    i18n("Warning"),
                                                    KStandardGuiItem::cont(),
                                                    KStandardGuiItem::cancel());
@@ -449,8 +449,8 @@ void MergeResultWindow::merge(bool bAutoSolve, e_SrcSelector defaultSelector, bo
 
             // Automatic solving for only whitespace changes.
             if(ml.bConflict &&
-               ((m_pldC == nullptr && (d.isEqualAB() || (d.isWhiteLine(A) && d.isWhiteLine(B)))) ||
-                (m_pldC != nullptr && ((d.isEqualAB() && d.isEqualAC()) || (d.isWhiteLine(A) && d.isWhiteLine(B) && d.isWhiteLine(C))))))
+                    ((m_pldC == nullptr && (d.isEqualAB() || (d.isWhiteLine(A) && d.isWhiteLine(B)))) ||
+                     (m_pldC != nullptr && ((d.isEqualAB() && d.isEqualAC()) || (d.isWhiteLine(A) && d.isWhiteLine(B) && d.isWhiteLine(C))))))
             {
                 ml.bWhiteSpaceConflict = true;
             }
@@ -1087,7 +1087,7 @@ void MergeResultWindow::choose(e_SrcSelector selector)
     }
 
     if(!bActive) // Selected source wasn't active.
-    {            // Append the lines from selected source here at rangeEnd.
+    {   // Append the lines from selected source here at rangeEnd.
         Diff3LineList::const_iterator d3llit = ml.id3l;
         int j;
 
@@ -1342,7 +1342,7 @@ MergeEditLineList& MergeResultWindow::HistoryMapEntry::choice(bool bThreeInputs)
         if(mellA.empty())
             return mellC.empty() ? mellB : mellC; // A doesn't exist, return one that exists
         else if(!mellB.empty() && !mellC.empty())
-        { // A, B and C exist
+        {   // A, B and C exist
             return mellA;
         }
         else
@@ -1358,7 +1358,7 @@ bool MergeResultWindow::HistoryMapEntry::staysInPlace(bool bThreeInputs, Diff3Li
     if(!bThreeInputs)
     {
         if(!mellA.empty() && !mellB.empty() && mellA.begin()->id3l() == mellB.begin()->id3l() &&
-           mellA.back().id3l() == iHistoryLast && mellB.back().id3l() == iHistoryLast)
+                mellA.back().id3l() == iHistoryLast && mellB.back().id3l() == iHistoryLast)
         {
             iHistoryEnd = mellA.begin()->id3l();
             return true;
@@ -1524,8 +1524,8 @@ void MergeResultWindow::slotRegExpAutoMerge()
         {
             Diff3LineList::const_iterator id3l = i->id3l;
             if(vcsKeywords.exactMatch(id3l->getString(A)) &&
-               vcsKeywords.exactMatch(id3l->getString(B)) &&
-               (m_pldC == nullptr || vcsKeywords.exactMatch(id3l->getString(C))))
+                    vcsKeywords.exactMatch(id3l->getString(B)) &&
+                    (m_pldC == nullptr || vcsKeywords.exactMatch(id3l->getString(C))))
             {
                 MergeEditLine& mel = *i->mergeEditLineList.begin();
                 mel.setSource(m_pldC == nullptr ? B : C, false);
@@ -1844,8 +1844,8 @@ void MergeResultWindow::writeLine(
     {
         p.fillRect(xOffset + 3, yOffset, 3, fontHeight, m_pOptions->m_fgColor);
         /*      p.setPen( blue );
-      p.drawLine( xOffset+2, yOffset, xOffset+2, yOffset+fontHeight-1 );
-      p.drawLine( xOffset+3, yOffset, xOffset+3, yOffset+fontHeight-1 );*/
+        p.drawLine( xOffset+2, yOffset, xOffset+2, yOffset+fontHeight-1 );
+        p.drawLine( xOffset+3, yOffset, xOffset+3, yOffset+fontHeight-1 );*/
     }
 }
 
@@ -2260,7 +2260,7 @@ void MergeResultWindow::keyPressEvent(QKeyEvent* e)
     case Qt::Key_Delete:
     {
         if(deleteSelection2(str, x, y, mlIt, melIt) || !melIt->isEditableText()) break;
-        
+
         if(x >= str.length())
         {
             if(y < m_nofLines - 1)
@@ -2337,7 +2337,7 @@ void MergeResultWindow::keyPressEvent(QKeyEvent* e)
         setModified();
         QString indentation;
         if(m_pOptions->m_bAutoIndentation)
-        { // calc last indentation
+        {   // calc last indentation
             MergeLineList::iterator mlIt1 = mlIt;
             MergeEditLineList::iterator melIt1 = melIt;
             for(;;)
@@ -2699,7 +2699,7 @@ QString MergeResultWindow::getSelection()
 }
 
 bool MergeResultWindow::deleteSelection2(QString& s, int& x, int& y,
-                                         MergeLineList::iterator& mlIt, MergeEditLineList::iterator& melIt)
+        MergeLineList::iterator& mlIt, MergeEditLineList::iterator& melIt)
 {
     if(m_selection.selectionContainsData())
     {

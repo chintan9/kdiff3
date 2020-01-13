@@ -26,10 +26,10 @@
 class CvsIgnoreListTest : public QObject
 {
     const QString defaultPatterns = QString::fromLatin1(". .. core RCSLOG tags TAGS RCS SCCS .make.state "
-                                                        ".nse_depinfo #* .#* cvslog.* ,* CVS CVS.adm .del-* *.a *.olb *.o *.obj "
-                                                        "*.so *.Z *~ *.old *.elc *.ln *.bak *.BAK *.orig *.rej *.exe _$* *$");
+                                    ".nse_depinfo #* .#* cvslog.* ,* CVS CVS.adm .del-* *.a *.olb *.o *.obj "
+                                    "*.so *.Z *~ *.old *.elc *.ln *.bak *.BAK *.orig *.rej *.exe _$* *$");
     Q_OBJECT
-  private Q_SLOTS:
+private Q_SLOTS:
     void init()
     {
         CvsIgnoreList test;
@@ -49,7 +49,7 @@ class CvsIgnoreListTest : public QObject
         QVERIFY(!test.m_exactPatterns.isEmpty());
         QVERIFY(test.m_exactPatterns == testString.split(' '));
     }
-    
+
     void matches()
     {
         CvsIgnoreList test;

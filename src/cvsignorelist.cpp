@@ -20,9 +20,9 @@
 void CvsIgnoreList::init(FileAccess& dir, const t_DirectoryList* pDirList)
 {
     static const QString ignorestr = QString::fromLatin1(". .. core RCSLOG tags TAGS RCS SCCS .make.state "
-                                   ".nse_depinfo #* .#* cvslog.* ,* CVS CVS.adm .del-* *.a *.olb *.o *.obj "
-                                   "*.so *.Z *~ *.old *.elc *.ln *.bak *.BAK *.orig *.rej *.exe _$* *$");
-    
+                                     ".nse_depinfo #* .#* cvslog.* ,* CVS CVS.adm .del-* *.a *.olb *.o *.obj "
+                                     "*.so *.Z *~ *.old *.elc *.ln *.bak *.BAK *.orig *.rej *.exe _$* *$");
+
     constexpr char varname[] = "CVSIGNORE";
 
     addEntriesFromString(ignorestr);
@@ -61,9 +61,9 @@ void CvsIgnoreList::addEntriesFromString(const QString& str)
 */
 void CvsIgnoreList::addEntriesFromFile(const QString& name)
 {
-    #ifdef AUTORUN
+#ifdef AUTORUN
     Q_UNUSED(name)
-    #else
+#else
     QFile file(name);
 
     if(file.open(QIODevice::ReadOnly))
@@ -74,7 +74,7 @@ void CvsIgnoreList::addEntriesFromFile(const QString& name)
             addEntry(stream.readLine());
         }
     }
-    #endif
+#endif
 }
 
 void CvsIgnoreList::addEntry(const QString& pattern)

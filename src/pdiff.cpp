@@ -6,15 +6,15 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "difftextwindow.h"
 #include "DirectoryInfo.h"
+#include "Logging.h"
+#include "Utils.h"
+#include "difftextwindow.h"
 #include "directorymergewindow.h"
 #include "fileaccess.h"
-#include "Logging.h"
 #include "kdiff3.h"
 #include "optiondialog.h"
 #include "progress.h"
-#include "Utils.h"
 
 #include "mergeresultwindow.h"
 #include "smalldialogs.h"
@@ -83,8 +83,8 @@ void KDiff3App::mainInit(TotalDiffStatus* pTotalDiffStatus, bool bLoadFiles, boo
         {
             int result = KMessageBox::warningYesNo(this,
                                                    i18n("The following option(s) you selected might change data:\n") + msg +
-                                                   i18n("\nMost likely this is not wanted during a merge.\n"
-                                                           "Do you want to disable these settings or continue with these settings active?"),
+                                                       i18n("\nMost likely this is not wanted during a merge.\n"
+                                                            "Do you want to disable these settings or continue with these settings active?"),
                                                    i18n("Option Unsafe for Merging"),
                                                    KGuiItem(i18n("Use These Options During Merge")),
                                                    KGuiItem(i18n("Disable Unsafe Options")));
@@ -438,7 +438,7 @@ void KDiff3App::createCaption()
     if(!f1.isEmpty())
     {
         if((f2.isEmpty() && f3.isEmpty()) ||
-                (f2.isEmpty() && f1 == f3) || (f3.isEmpty() && f1 == f2) || (f1 == f2 && f1 == f3))
+           (f2.isEmpty() && f1 == f3) || (f3.isEmpty() && f1 == f2) || (f1 == f2 && f1 == f3))
             caption = f1;
     }
     else if(!f2.isEmpty())
@@ -769,9 +769,9 @@ void KDiff3App::slotFinishMainInit()
         if(bVisibleMergeResultWindow && (!m_sd1->isText() || !m_sd2->isText() || !m_sd3->isText()))
         {
             KMessageBox::information(this, i18n(
-                                         "Some input files do not seem to be pure text files.\n"
-                                         "Note that the KDiff3 merge was not meant for binary data.\n"
-                                         "Continue at your own risk."));
+                                               "Some input files do not seem to be pure text files.\n"
+                                               "Note that the KDiff3 merge was not meant for binary data.\n"
+                                               "Continue at your own risk."));
         }
         if(m_sd1->isIncompleteConversion() || m_sd2->isIncompleteConversion() || m_sd3->isIncompleteConversion())
         {
@@ -786,7 +786,8 @@ void KDiff3App::slotFinishMainInit()
             KMessageBox::information(this, i18n("Some input characters could not be converted to valid unicode.\n"
                                                 "You might be using the wrong codec. (e.g. UTF-8 for non UTF-8 files).\n"
                                                 "Do not save the result if unsure. Continue at your own risk.\n"
-                                                "Affected input files are in %1.", files));
+                                                "Affected input files are in %1.",
+                                                files));
         }
     }
 
@@ -829,34 +830,34 @@ void KDiff3App::keyPressEvent(QKeyEvent* keyEvent)
 
     switch(keyEvent->key())
     {
-    case Qt::Key_Down:
-    case Qt::Key_Up:
-    case Qt::Key_PageDown:
-    case Qt::Key_PageUp:
-        if(DiffTextWindow::mVScrollBar != nullptr)
-            QCoreApplication::postEvent(DiffTextWindow::mVScrollBar, new QKeyEvent(*keyEvent));
-        return;
-    case Qt::Key_Left:
-    case Qt::Key_Right:
-        if(m_pHScrollBar != nullptr)
-            QCoreApplication::postEvent(m_pHScrollBar, new QKeyEvent(*keyEvent));
-
-        break;
-    case Qt::Key_End:
-    case Qt::Key_Home:
-        if(bCtrl)
-        {
+        case Qt::Key_Down:
+        case Qt::Key_Up:
+        case Qt::Key_PageDown:
+        case Qt::Key_PageUp:
             if(DiffTextWindow::mVScrollBar != nullptr)
                 QCoreApplication::postEvent(DiffTextWindow::mVScrollBar, new QKeyEvent(*keyEvent));
-        }
-        else
-        {
+            return;
+        case Qt::Key_Left:
+        case Qt::Key_Right:
             if(m_pHScrollBar != nullptr)
                 QCoreApplication::postEvent(m_pHScrollBar, new QKeyEvent(*keyEvent));
-        }
-        break;
-    default:
-        break;
+
+            break;
+        case Qt::Key_End:
+        case Qt::Key_Home:
+            if(bCtrl)
+            {
+                if(DiffTextWindow::mVScrollBar != nullptr)
+                    QCoreApplication::postEvent(DiffTextWindow::mVScrollBar, new QKeyEvent(*keyEvent));
+            }
+            else
+            {
+                if(m_pHScrollBar != nullptr)
+                    QCoreApplication::postEvent(m_pHScrollBar, new QKeyEvent(*keyEvent));
+            }
+            break;
+        default:
+            break;
     }
 }
 
@@ -889,11 +890,11 @@ void KDiff3App::slotFileOpen()
     for(;;)
     {
         QPointer<OpenDialog> d = QPointer<OpenDialog>(new OpenDialog(this,
-                                 QDir::toNativeSeparators(m_bDirCompare ? m_dirinfo->dirA().prettyAbsPath() : m_sd1->isFromBuffer() ? QString("") : m_sd1->getAliasName()),
-                                 QDir::toNativeSeparators(m_bDirCompare ? m_dirinfo->dirB().prettyAbsPath() : m_sd2->isFromBuffer() ? QString("") : m_sd2->getAliasName()),
-                                 QDir::toNativeSeparators(m_bDirCompare ? m_dirinfo->dirC().prettyAbsPath() : m_sd3->isFromBuffer() ? QString("") : m_sd3->getAliasName()),
-                                 m_bDirCompare ? !m_dirinfo->destDir().prettyAbsPath().isEmpty() : !m_outputFilename.isEmpty(),
-                                 QDir::toNativeSeparators(m_bDefaultFilename ? QString("") : m_outputFilename), m_pOptionDialog->getOptions()));
+                                                                     QDir::toNativeSeparators(m_bDirCompare ? m_dirinfo->dirA().prettyAbsPath() : m_sd1->isFromBuffer() ? QString("") : m_sd1->getAliasName()),
+                                                                     QDir::toNativeSeparators(m_bDirCompare ? m_dirinfo->dirB().prettyAbsPath() : m_sd2->isFromBuffer() ? QString("") : m_sd2->getAliasName()),
+                                                                     QDir::toNativeSeparators(m_bDirCompare ? m_dirinfo->dirC().prettyAbsPath() : m_sd3->isFromBuffer() ? QString("") : m_sd3->getAliasName()),
+                                                                     m_bDirCompare ? !m_dirinfo->destDir().prettyAbsPath().isEmpty() : !m_outputFilename.isEmpty(),
+                                                                     QDir::toNativeSeparators(m_bDefaultFilename ? QString("") : m_outputFilename), m_pOptionDialog->getOptions()));
 
         int status = d->exec();
         if(status == QDialog::Accepted)
@@ -939,8 +940,8 @@ void KDiff3App::slotFileOpen()
                 mainInit();
 
                 if((!m_sd1->isEmpty() && !m_sd1->hasData()) ||
-                        (!m_sd2->isEmpty() && !m_sd2->hasData()) ||
-                        (!m_sd3->isEmpty() && !m_sd3->hasData()))
+                   (!m_sd2->isEmpty() && !m_sd2->hasData()) ||
+                   (!m_sd3->isEmpty() && !m_sd3->hasData()))
                 {
                     QString text(i18n("Opening of these files failed:"));
                     text += "\n\n";
@@ -1005,8 +1006,8 @@ void KDiff3App::slotFileOpen2(const QString& fn1, const QString& fn2, const QStr
             return;
 
         if(!((!m_sd1->isEmpty() && !m_sd1->hasData()) ||
-                (!m_sd2->isEmpty() && !m_sd2->hasData()) ||
-                (!m_sd3->isEmpty() && !m_sd3->hasData())))
+             (!m_sd2->isEmpty() && !m_sd2->hasData()) ||
+             (!m_sd3->isEmpty() && !m_sd3->hasData())))
         {
             if(m_pDirectoryMergeWindow != nullptr && m_pDirectoryMergeWindow->isVisible() && !dirShowBoth->isChecked())
             {
@@ -1470,8 +1471,8 @@ void KDiff3App::recalcWordWrap(int visibleTextWidthForPrinting)
         else
         {
             g_pProgressDialog->setInformation(m_pOptions->wordWrapOn()
-                                              ? i18n("Word wrap (Cancel disables word wrap)")
-                                              : i18n("Calculating max width for horizontal scrollbar"),
+                                                  ? i18n("Word wrap (Cancel disables word wrap)")
+                                                  : i18n("Calculating max width for horizontal scrollbar"),
                                               false);
         }
     }
@@ -1625,8 +1626,8 @@ bool KDiff3App::improveFilenames(bool bCreateNewInstance)
 
             m_dirinfo = QSharedPointer<DirectoryInfo>::create(f1, f2, f3, destDir);
             bool bSuccess = m_pDirectoryMergeWindow->init(
-                                m_dirinfo,
-                                !m_outputFilename.isEmpty());
+                m_dirinfo,
+                !m_outputFilename.isEmpty());
             //This is a bug if it still happens.
             Q_ASSERT(m_bDirCompare == bDirCompare);
 
@@ -1671,10 +1672,10 @@ bool KDiff3App::canContinue()
     if(m_bOutputModified)
     {
         int result = KMessageBox::warningYesNoCancel(this,
-                     i18n("The merge result has not been saved."),
-                     i18n("Warning"),
-                     KGuiItem(i18n("Save && Continue")),
-                     KGuiItem(i18n("Continue Without Saving")));
+                                                     i18n("The merge result has not been saved."),
+                                                     i18n("Warning"),
+                                                     KGuiItem(i18n("Save && Continue")),
+                                                     KGuiItem(i18n("Continue Without Saving")));
         if(result == KMessageBox::Cancel)
             return false;
         else if(result == KMessageBox::Yes)
@@ -1810,7 +1811,7 @@ void KDiff3App::slotEditFindNext()
     if(m_pFindDialog->currentWindow == 1)
     {
         if(m_pFindDialog->m_pSearchInA->isChecked() && m_pDiffTextWindow1 != nullptr &&
-                m_pDiffTextWindow1->findString(s, d3vLine, posInLine, bDirDown, bCaseSensitive))
+           m_pDiffTextWindow1->findString(s, d3vLine, posInLine, bDirDown, bCaseSensitive))
         {
             m_pDiffTextWindow1->setSelection(d3vLine, posInLine, d3vLine, posInLine + s.length(), l, p);
             DiffTextWindow::mVScrollBar->setValue(l - DiffTextWindow::mVScrollBar->pageStep() / 2);
@@ -1829,7 +1830,7 @@ void KDiff3App::slotEditFindNext()
     if(m_pFindDialog->currentWindow == 2)
     {
         if(m_pFindDialog->m_pSearchInB->isChecked() && m_pDiffTextWindow2 != nullptr &&
-                m_pDiffTextWindow2->findString(s, d3vLine, posInLine, bDirDown, bCaseSensitive))
+           m_pDiffTextWindow2->findString(s, d3vLine, posInLine, bDirDown, bCaseSensitive))
         {
             m_pDiffTextWindow2->setSelection(d3vLine, posInLine, d3vLine, posInLine + s.length(), l, p);
             DiffTextWindow::mVScrollBar->setValue(l - DiffTextWindow::mVScrollBar->pageStep() / 2);
@@ -1848,7 +1849,7 @@ void KDiff3App::slotEditFindNext()
     if(m_pFindDialog->currentWindow == 3)
     {
         if(m_pFindDialog->m_pSearchInC->isChecked() && m_pDiffTextWindow3 != nullptr &&
-                m_pDiffTextWindow3->findString(s, d3vLine, posInLine, bDirDown, bCaseSensitive))
+           m_pDiffTextWindow3->findString(s, d3vLine, posInLine, bDirDown, bCaseSensitive))
         {
             m_pDiffTextWindow3->setSelection(d3vLine, posInLine, d3vLine, posInLine + s.length(), l, p);
             DiffTextWindow::mVScrollBar->setValue(l - DiffTextWindow::mVScrollBar->pageStep() / 2);
@@ -1867,7 +1868,7 @@ void KDiff3App::slotEditFindNext()
     if(m_pFindDialog->currentWindow == 4)
     {
         if(m_pFindDialog->m_pSearchInOutput->isChecked() && m_pMergeResultWindow != nullptr && m_pMergeResultWindow->isVisible() &&
-                m_pMergeResultWindow->findString(s, d3vLine, posInLine, bDirDown, bCaseSensitive))
+           m_pMergeResultWindow->findString(s, d3vLine, posInLine, bDirDown, bCaseSensitive))
         {
             m_pMergeResultWindow->setSelection(d3vLine, posInLine, d3vLine, posInLine + s.length());
             MergeResultWindow::mVScrollBar->setValue(d3vLine - MergeResultWindow::mVScrollBar->pageStep() / 2);
@@ -2101,7 +2102,7 @@ void KDiff3App::slotUpdateAvailabilities()
             m_pDirectoryMergeSplitter->setVisible(m_bDirCompare);
 
         if(m_pMainWidget != nullptr && !m_pMainWidget->isVisible() &&
-                bTextDataAvailable && !m_pDirectoryMergeWindow->isScanning())
+           bTextDataAvailable && !m_pDirectoryMergeWindow->isScanning())
             m_pMainWidget->show();
     }
 

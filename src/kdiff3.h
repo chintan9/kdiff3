@@ -62,7 +62,7 @@ class ReversibleScrollBar : public QScrollBar
     bool* m_pbRightToLeftLanguage;
     int m_realVal;
 
-public:
+  public:
     ReversibleScrollBar(Qt::Orientation o, bool* pbRightToLeftLanguage)
         : QScrollBar(o)
     {
@@ -70,7 +70,8 @@ public:
         m_realVal = 0;
         connect(this, &ReversibleScrollBar::valueChanged, this, &ReversibleScrollBar::slotValueChanged);
     }
-    void setAgain() {
+    void setAgain()
+    {
         setValue(m_realVal);
     }
 
@@ -86,7 +87,7 @@ public:
     {
         return m_realVal;
     }
-public Q_SLOTS:
+  public Q_SLOTS:
     void slotValueChanged(int i)
     {
         m_realVal = i;
@@ -95,7 +96,7 @@ public Q_SLOTS:
         Q_EMIT valueChanged2(m_realVal);
     }
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void valueChanged2(int);
 };
 
@@ -103,7 +104,7 @@ class KDiff3App : public QSplitter
 {
     Q_OBJECT
 
-public:
+  public:
     /** constructor of KDiff3App, calls all init functions to create the application.
      */
     KDiff3App(QWidget* parent, const QString& name, KDiff3Part* pKDiff3Part);
@@ -134,14 +135,15 @@ public:
     virtual bool isFileSaved() const;
     virtual bool isDirComparison() const;
 
-    static bool isTripleDiff() {
+    static bool isTripleDiff()
+    {
         return m_bTripleDiff;
     }
 
     KActionCollection* actionCollection() const;
 
-    static boost::signals2::signal<bool (), and> shouldContinue;
-Q_SIGNALS:
+    static boost::signals2::signal<bool(), and> shouldContinue;
+  Q_SIGNALS:
     void createNewInstance(const QString& fn1, const QString& fn2, const QString& fn3);
 
     void sigRecalcWordWrap();
@@ -174,7 +176,7 @@ Q_SIGNALS:
     void selectAll();
 
     void changeOverViewMode(e_OverviewMode);
-public Q_SLOTS:
+  public Q_SLOTS:
 
     /** open a file and load it into the document*/
     void slotFileOpen();
@@ -284,7 +286,7 @@ public Q_SLOTS:
 
     void setHScrollBarRange();
 
-protected:
+  protected:
     void setLockPainting(bool bLock);
     void createCaption();
     void initDirectoryMergeActions();
@@ -294,7 +296,7 @@ protected:
     /** creates the centerwidget of the KMainWindow instance and sets it as the view */
     void initView();
 
-private:
+  private:
     void mainInit(TotalDiffStatus* pTotalDiffStatus = nullptr, bool bLoadFiles = true, bool bUseCurrentEncoding = false);
 
     void mainWindowEnable(bool bEnable);
@@ -309,7 +311,7 @@ private:
     void choose(e_SrcSelector choice);
 
     QStatusBar* statusBar() const;
-    KToolBar* toolBar(const QLatin1String &toolBarId) const;
+    KToolBar* toolBar(const QLatin1String& toolBarId) const;
     void recalcWordWrap(int visibleTextWidthForPrinting = -1);
 
     /** the configuration object of the application */
@@ -440,7 +442,7 @@ private:
     bool m_bAutoMode = false;
     bool m_bRecalcWordWrapPosted = false;
 
-    int m_firstD3LIdx;                 // only needed during recalcWordWrap
+    int m_firstD3LIdx; // only needed during recalcWordWrap
     QPointer<QEventLoop> m_pEventLoopForPrinting;
 
     /*

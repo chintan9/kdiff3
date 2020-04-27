@@ -16,10 +16,11 @@
 
 class LineRef
 {
-public:
+  public:
     typedef qint32 LineType;
     inline LineRef() = default;
-    inline LineRef(const LineType i) {
+    inline LineRef(const LineType i)
+    {
         mLineNumber = i;
     }
     inline LineRef(const qint64 i)
@@ -29,10 +30,12 @@ public:
         else
             mLineNumber = -1;
     }
-    inline operator LineType() const {
+    inline operator LineType() const
+    {
         return mLineNumber;
     }
-    inline LineRef& operator=(const LineType lineIn) {
+    inline LineRef& operator=(const LineType lineIn)
+    {
         mLineNumber = lineIn;
         return *this;
     }
@@ -67,14 +70,16 @@ public:
         --mLineNumber;
         return line;
     };
-    inline void invalidate() {
+    inline void invalidate()
+    {
         mLineNumber = -1;
     }
-    inline bool isValid() const {
+    inline bool isValid() const
+    {
         return mLineNumber != -1;
     }
 
-private:
+  private:
     LineType mLineNumber = -1;
 };
 

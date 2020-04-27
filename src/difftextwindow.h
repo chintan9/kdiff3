@@ -12,8 +12,8 @@
 #include "diff.h"
 
 #include <QLabel>
-#include <QSharedPointer>  // for QSharedPointer
-#include <QString>         // for QString
+#include <QSharedPointer> // for QSharedPointer
+#include <QString>        // for QString
 
 class QMenu;
 class RecalcWordWrapRunnable;
@@ -30,11 +30,11 @@ class KDiff3App;
 class DiffTextWindow : public QWidget
 {
     Q_OBJECT
-public:
+  public:
     //Using this as a scoped global
     static QScrollBar* mVScrollBar;
 
-    DiffTextWindow(DiffTextWindowFrame* pParent, const QSharedPointer<Options> &pOptions, e_SrcSelector winIdx);
+    DiffTextWindow(DiffTextWindowFrame* pParent, const QSharedPointer<Options>& pOptions, e_SrcSelector winIdx);
     ~DiffTextWindow() override;
     void init(
         const QString& fileName,
@@ -43,10 +43,9 @@ public:
         const QVector<LineData>* pLineData,
         int size,
         const Diff3LineVector* pDiff3LineVector,
-        const ManualDiffHelpList* pManualDiffHelpList
-    );
+        const ManualDiffHelpList* pManualDiffHelpList);
 
-    void setupConnections(const KDiff3App *app) const;
+    void setupConnections(const KDiff3App* app) const;
 
     void reset();
     void convertToLinePos(int x, int y, LineRef& line, int& pos);
@@ -93,7 +92,7 @@ public:
     qint32 getLineNumberWidth() const;
 
     void setSourceData(const QSharedPointer<SourceData>& inData);
-Q_SIGNALS:
+  Q_SIGNALS:
     void statusBarMessage(const QString& message);
     void scrollVertically(QtNumberType deltaY);
     void resizeHeightChangedSignal(int nofVisibleLines);
@@ -110,7 +109,7 @@ Q_SIGNALS:
     void finishDrop();
 
     void firstLineChanged(QtNumberType firstLine);
-public Q_SLOTS:
+  public Q_SLOTS:
     void setFirstLine(QtNumberType line);
     void setHorizScrollOffset(int horizScrollOffset);
     void resetSelection();
@@ -119,7 +118,7 @@ public Q_SLOTS:
 
     void slotSelectAll();
 
-protected:
+  protected:
     void mousePressEvent(QMouseEvent*) override;
     void mouseReleaseEvent(QMouseEvent*) override;
     void mouseMoveEvent(QMouseEvent*) override;
@@ -136,7 +135,7 @@ protected:
     void resizeEvent(QResizeEvent*) override;
     void timerEvent(QTimerEvent*) override;
 
-private:
+  private:
     static QList<RecalcWordWrapRunnable*> s_runnables;
     static constexpr int s_linesPerRunnable = 2000;
 
@@ -149,54 +148,54 @@ class DiffTextWindowFrameData;
 class DiffTextWindowFrame : public QWidget
 {
     Q_OBJECT
-public:
-    DiffTextWindowFrame(QWidget* pParent, const QSharedPointer<Options> &pOptions, e_SrcSelector winIdx, QSharedPointer<SourceData> psd);
+  public:
+    DiffTextWindowFrame(QWidget* pParent, const QSharedPointer<Options>& pOptions, e_SrcSelector winIdx, QSharedPointer<SourceData> psd);
     ~DiffTextWindowFrame() override;
     DiffTextWindow* getDiffTextWindow();
     void init();
 
-    void setupConnections(const KDiff3App *app);
+    void setupConnections(const KDiff3App* app);
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void fileNameChanged(const QString&, e_SrcSelector);
     void encodingChanged(QTextCodec*);
 
-public Q_SLOTS:
+  public Q_SLOTS:
     void setFirstLine(QtNumberType firstLine);
 
-protected:
+  protected:
     bool eventFilter(QObject*, QEvent*) override;
     //void paintEvent(QPaintEvent*);
-private Q_SLOTS:
+  private Q_SLOTS:
     void slotReturnPressed();
     void slotBrowseButtonClicked();
 
-    void slotEncodingChanged(QTextCodec* c) {
+    void slotEncodingChanged(QTextCodec* c)
+    {
         Q_EMIT encodingChanged(c);
-    };//relay signal from encoding label
+    }; //relay signal from encoding label
 
-
-private:
+  private:
     DiffTextWindowFrameData* d;
 };
 
 class EncodingLabel : public QLabel
 {
     Q_OBJECT
-public:
-    EncodingLabel(const QString& text, QSharedPointer<SourceData> psd, const QSharedPointer<Options> &pOptions);
+  public:
+    EncodingLabel(const QString& text, QSharedPointer<SourceData> psd, const QSharedPointer<Options>& pOptions);
 
-protected:
+  protected:
     void mouseMoveEvent(QMouseEvent* ev) override;
     void mousePressEvent(QMouseEvent* ev) override;
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void encodingChanged(QTextCodec*);
 
-private Q_SLOTS:
+  private Q_SLOTS:
     void slotSelectEncoding();
 
-private:
+  private:
     QMenu* m_pContextEncodingMenu;
     QSharedPointer<SourceData> m_pSourceData; //SourceData to get access to "isEmpty()" and "isFromBuffer()" functions
     static const int m_maxRecentEncodings = 5;

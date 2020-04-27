@@ -15,7 +15,8 @@
 struct and
 {
     typedef bool result_type;
-    template <typename InputIterator> bool operator()(InputIterator first, InputIterator last) const
+    template <typename InputIterator>
+    bool operator()(InputIterator first, InputIterator last) const
     {
         // If there are no slots to call, just return true
         if(first == last) return true;
@@ -34,7 +35,8 @@ struct and
 
 #ifdef BOOST_NO_EXCEPTIONS
 //Because boost doesn't define this
-inline void boost::throw_exception(std::exception const& e) {
+inline void boost::throw_exception(std::exception const& e)
+{
     Q_UNUSED(e);
     std::terminate();
 }

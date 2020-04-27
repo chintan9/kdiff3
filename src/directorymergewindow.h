@@ -10,11 +10,11 @@
 #define DIRECTORY_MERGE_WINDOW_H
 
 #include "common.h"
-#include "fileaccess.h"
 #include "diff.h" //TotalDiffStatus
+#include "fileaccess.h"
 
-#include <QTreeWidget>
 #include <QEvent>
+#include <QTreeWidget>
 
 #include <list>
 #include <map>
@@ -37,7 +37,7 @@ class KDiff3App;
 class DirectoryMergeWindow : public QTreeView
 {
     Q_OBJECT
-public:
+  public:
     struct t_ItemInfo;
 
     DirectoryMergeWindow(QWidget* pParent, const QSharedPointer<Options>& pOptions);
@@ -46,8 +46,7 @@ public:
     bool init(
         const QSharedPointer<DirectoryInfo>& dirInfo,
         bool bDirectoryMerge,
-        bool bReload = false
-    );
+        bool bReload = false);
     bool isFileSelected();
     bool isDirectoryMergeInProgress();
     int totalColumnWidth();
@@ -71,7 +70,7 @@ public:
     QString getDirNameC() const;
     QString getDirNameDest() const;
 
-public Q_SLOTS:
+  public Q_SLOTS:
     void reload();
     void mergeCurrentFile();
     void compareCurrentFile();
@@ -117,19 +116,20 @@ public Q_SLOTS:
     void slotSaveMergeState();
     void slotLoadMergeState();
 
-    inline void slotRefresh() {
+    inline void slotRefresh()
+    {
         updateFileVisibilities();
     };
 
-Q_SIGNALS:
+  Q_SIGNALS:
     void startDiffMerge(const QString& fn1, const QString& fn2, const QString& fn3, const QString& ofn, const QString&, const QString&, const QString&, TotalDiffStatus*);
     void updateAvailabilities();
     void statusBarMessage(const QString& msg);
-protected Q_SLOTS:
+  protected Q_SLOTS:
     void onDoubleClick(const QModelIndex&);
     void onExpanded();
     void currentChanged(const QModelIndex& current, const QModelIndex& previous) override; // override
-private:
+  private:
     int getIntFromIndex(const QModelIndex& index) const;
     const QSharedPointer<Options>& getOptions() const;
 
@@ -141,7 +141,7 @@ private:
 class DirectoryMergeInfo : public QFrame
 {
     Q_OBJECT
-public:
+  public:
     explicit DirectoryMergeInfo(QWidget* pParent);
     void setInfo(
         const FileAccess& dirA,
@@ -149,14 +149,15 @@ public:
         const FileAccess& dirC,
         const FileAccess& dirDest,
         MergeFileInfos& mfi);
-    QTreeWidget* getInfoList() {
+    QTreeWidget* getInfoList()
+    {
         return m_pInfoList;
     }
     bool eventFilter(QObject* o, QEvent* e) override;
-Q_SIGNALS:
+  Q_SIGNALS:
     void gotFocus();
 
-private:
+  private:
     void addListViewItem(const QString& dir, const QString& basePath, FileAccess* fi);
 
     QLabel* m_pInfoA;

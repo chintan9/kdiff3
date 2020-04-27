@@ -50,13 +50,13 @@ QList<RecalcWordWrapRunnable*> DiffTextWindow::s_runnables; //Used in startRunab
 
 class RecalcWordWrapRunnable : public QRunnable
 {
-private:
+  private:
     static QAtomicInt s_runnableCount;
     DiffTextWindow* m_pDTW;
     int m_visibleTextWidth;
     int m_cacheIdx;
 
-public:
+  public:
     static QAtomicInt s_maxNofRunnables;
     RecalcWordWrapRunnable(DiffTextWindow* p, int visibleTextWidth, int cacheIdx)
         : m_pDTW(p), m_visibleTextWidth(visibleTextWidth), m_cacheIdx(cacheIdx)
@@ -81,21 +81,24 @@ QAtomicInt RecalcWordWrapRunnable::s_maxNofRunnables = 0;
 
 class WrapLineCacheData
 {
-public:
+  public:
     WrapLineCacheData() {}
     WrapLineCacheData(int d3LineIdx, int textStart, int textLength)
         : m_d3LineIdx(d3LineIdx), m_textStart(textStart), m_textLength(textLength) {}
-    qint32 d3LineIdx() const {
+    qint32 d3LineIdx() const
+    {
         return m_d3LineIdx;
     }
-    qint32 textStart() const {
+    qint32 textStart() const
+    {
         return m_textStart;
     }
-    qint32 textLength() const {
+    qint32 textLength() const
+    {
         return m_textLength;
     }
 
-private:
+  private:
     qint32 m_d3LineIdx = 0;
     qint32 m_textStart = 0;
     qint32 m_textLength = 0;
@@ -103,7 +106,7 @@ private:
 
 class DiffTextWindowData
 {
-public:
+  public:
     explicit DiffTextWindowData(DiffTextWindow* p)
     {
         m_pDiffTextWindow = p;
@@ -127,29 +130,34 @@ public:
 
     void myUpdate(int afterMilliSecs);
 
-    int leftInfoWidth() const {
-        return 4 + m_lineNumberWidth;    // Nr of information columns on left side
+    int leftInfoWidth() const
+    {
+        return 4 + m_lineNumberWidth; // Nr of information columns on left side
     }
     int convertLineOnScreenToLineInSource(int lineOnScreen, e_CoordType coordType, bool bFirstLine);
 
     void prepareTextLayout(QTextLayout& textLayout, int visibleTextWidth = -1);
 
-    bool isThreeWay() const {
+    bool isThreeWay() const
+    {
         return KDiff3App::isTripleDiff();
     };
-    const QString& getFileName() {
+    const QString& getFileName()
+    {
         return m_filename;
     }
 
-    const Diff3LineVector* getDiff3LineVector() {
+    const Diff3LineVector* getDiff3LineVector()
+    {
         return m_pDiff3LineVector;
     }
 
-    const QSharedPointer<Options>& getOptions() {
+    const QSharedPointer<Options>& getOptions()
+    {
         return m_pOptions;
     }
 
-private:
+  private:
     //TODO: Remove friend classes after creating accessors. Please don't add new classes here
     friend DiffTextWindow;
     DiffTextWindow* m_pDiffTextWindow;
@@ -196,32 +204,40 @@ private:
     QSharedPointer<SourceData> sourceData;
 };
 
-void DiffTextWindow::setSourceData(const QSharedPointer<SourceData>& inData) {
+void DiffTextWindow::setSourceData(const QSharedPointer<SourceData>& inData)
+{
     d->sourceData = inData;
 }
-bool DiffTextWindow::isThreeWay() const {
+bool DiffTextWindow::isThreeWay() const
+{
     return d->isThreeWay();
 };
-const QString& DiffTextWindow::getFileName() const {
+const QString& DiffTextWindow::getFileName() const
+{
     return d->getFileName();
 }
 
-e_SrcSelector DiffTextWindow::getWindowIndex() const {
+e_SrcSelector DiffTextWindow::getWindowIndex() const
+{
     return d->m_winIdx;
 };
 
-const QString DiffTextWindow::getEncodingDisplayString() const {
+const QString DiffTextWindow::getEncodingDisplayString() const
+{
     return d->m_pTextCodec != nullptr ? QLatin1String(d->m_pTextCodec->name()) : QString();
 }
-e_LineEndStyle DiffTextWindow::getLineEndStyle() const {
+e_LineEndStyle DiffTextWindow::getLineEndStyle() const
+{
     return d->m_eLineEndStyle;
 }
 
-const Diff3LineVector* DiffTextWindow::getDiff3LineVector() const {
+const Diff3LineVector* DiffTextWindow::getDiff3LineVector() const
+{
     return d->getDiff3LineVector();
 }
 
-qint32 DiffTextWindow::getLineNumberWidth() const {
+qint32 DiffTextWindow::getLineNumberWidth() const
+{
     return (int)log10((double)std::max(d->m_size, 1)) + 1;
 }
 
@@ -557,10 +573,10 @@ void DiffTextWindow::setFastSelectorRange(int line1, int nofLines)
     if(isVisible())
     {
         int newFirstLine = getBestFirstLine(
-                               convertDiff3LineIdxToLine(d->m_fastSelectorLine1),
-                               convertDiff3LineIdxToLine(d->m_fastSelectorLine1 + d->m_fastSelectorNofLines) - convertDiff3LineIdxToLine(d->m_fastSelectorLine1),
-                               d->m_firstLine,
-                               getNofVisibleLines());
+            convertDiff3LineIdxToLine(d->m_fastSelectorLine1),
+            convertDiff3LineIdxToLine(d->m_fastSelectorLine1 + d->m_fastSelectorNofLines) - convertDiff3LineIdxToLine(d->m_fastSelectorLine1),
+            d->m_firstLine,
+            getNofVisibleLines());
         if(newFirstLine != d->m_firstLine)
         {
             Q_EMIT scrollVertically(newFirstLine - d->m_firstLine);
@@ -621,7 +637,7 @@ void DiffTextWindow::mousePressEvent(QMouseEvent* e)
             d->m_selection.reset(); // Disable current d->m_selection
         }
         else
-        {   // Selection
+        { // Selection
             resetSelection();
             d->m_selection.start(line, pos);
             d->m_selection.end(line, pos);
@@ -693,7 +709,7 @@ void DiffTextWindow::mouseReleaseEvent(QMouseEvent* e)
 }
 
 void DiffTextWindow::mouseMoveEvent(QMouseEvent* e)
-{   //Handles selection highlighting.
+{ //Handles selection highlighting.
     LineRef line;
     int pos;
     convertToLinePos(e->x(), e->y(), line, pos);
@@ -832,7 +848,7 @@ void DiffTextWindow::convertToLinePos(int x, int y, LineRef& line, int& pos)
 
 class FormatRangeHelper
 {
-private:
+  private:
     QFont m_font;
     QPen m_pen;
     QColor m_background;
@@ -840,8 +856,9 @@ private:
 
     QVector<QTextLayout::FormatRange> m_formatRanges;
 
-public:
-    inline operator QVector<QTextLayout::FormatRange>() {
+  public:
+    inline operator QVector<QTextLayout::FormatRange>()
+    {
         return m_formatRanges;
     }
     FormatRangeHelper()
@@ -1024,13 +1041,13 @@ void DiffTextWindowData::writeLine(
         {
             switch(lineString[lineString.length() - 1].unicode())
             {
-            case '\n':
-                lineString[lineString.length() - 1] = 0x00B6;
-                break; // "Pilcrow", "paragraph mark"
-            case '\r':
-                lineString[lineString.length() - 1] = 0x00A4;
-                break; // Currency sign ;0x2761 "curved stem paragraph sign ornament"
-                //case '\0b' : lineString[lineString.length()-1] = 0x2756; break; // some other nice looking character
+                case '\n':
+                    lineString[lineString.length() - 1] = 0x00B6;
+                    break; // "Pilcrow", "paragraph mark"
+                case '\r':
+                    lineString[lineString.length() - 1] = 0x00A4;
+                    break; // Currency sign ;0x2761 "curved stem paragraph sign ornament"
+                    //case '\0b' : lineString[lineString.length()-1] = 0x2756; break; // some other nice looking character
             }
         }
         QVector<ChangeFlags> charChanged(pld->size());
@@ -1199,7 +1216,7 @@ void DiffTextWindow::paintEvent(QPaintEvent* e)
 void DiffTextWindow::print(RLPainter& p, const QRect&, int firstLine, int nofLinesPerPage)
 {
     if(d->m_pDiff3LineVector == nullptr || !updatesEnabled() ||
-            (d->m_diff3WrapLineVector.empty() && d->m_bWordWrap))
+       (d->m_diff3WrapLineVector.empty() && d->m_bWordWrap))
         return;
     resetSelection();
     int oldFirstLine = d->m_firstLine;
@@ -1396,7 +1413,7 @@ QString DiffTextWindow::getSelection()
             }
 
             if(d->m_selection.within(line, size) &&
-                    !(d->m_bWordWrap && it + 1 < vectorSize && d3l == d->m_diff3WrapLineVector[it + 1].pD3L))
+               !(d->m_bWordWrap && it + 1 < vectorSize && d3l == d->m_diff3WrapLineVector[it + 1].pD3L))
             {
 #if defined(Q_OS_WIN)
                 selectionString += '\r';
@@ -1822,7 +1839,7 @@ void DiffTextWindow::recalcWordWrapHelper(int wrapLineVectorSize, int visibleTex
 
 class DiffTextWindowFrameData
 {
-public:
+  public:
     DiffTextWindowFrameData(DiffTextWindowFrame* frame, const QSharedPointer<Options>& pOptions, const e_SrcSelector winIdx)
     {
         m_winIdx = winIdx;
@@ -1839,24 +1856,29 @@ public:
         m_pTopLine = new QLabel(m_pTopLineWidget);
     }
 
-    const QPushButton* getBrowseButton() const {
+    const QPushButton* getBrowseButton() const
+    {
         return m_pBrowseButton;
     }
-    const FileNameLineEdit* getFileSelectionField() const {
+    const FileNameLineEdit* getFileSelectionField() const
+    {
         return m_pFileSelection;
     }
-    const QWidget* getTopLineWidget() const {
+    const QWidget* getTopLineWidget() const
+    {
         return m_pTopLineWidget;
     }
-    const QLabel* getLabel() const {
+    const QLabel* getLabel() const
+    {
         return m_pLabel;
     }
 
-    const QSharedPointer<Options> getOptions() {
+    const QSharedPointer<Options> getOptions()
+    {
         return m_pOptions;
     }
 
-private:
+  private:
     friend DiffTextWindowFrame;
     DiffTextWindow* m_pDiffTextWindow;
     FileNameLineEdit* m_pFileSelection;

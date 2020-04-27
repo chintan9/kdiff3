@@ -8,11 +8,11 @@
 
 #include "mergeresultwindow.h"
 
+#include "RLPainter.h"
+#include "Utils.h" // for Utils
+#include "guiutils.h"
 #include "kdiff3.h"
 #include "options.h"
-#include "RLPainter.h"
-#include "guiutils.h"
-#include "Utils.h"             // for Utils
 
 #include <QAction>
 #include <QApplication>
@@ -29,7 +29,6 @@
 #include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
-#include <QtMath>
 #include <QMouseEvent>
 #include <QPaintEvent>
 #include <QPainter>
@@ -44,6 +43,7 @@
 #include <QTimerEvent>
 #include <QUrl>
 #include <QWheelEvent>
+#include <QtMath>
 
 #include <KActionCollection>
 #include <KLocalizedString>
@@ -65,7 +65,7 @@ QPointer<QAction> MergeResultWindow::chooseCForUnsolvedWhiteSpaceConflicts;
 
 MergeResultWindow::MergeResultWindow(
     QWidget* pParent,
-    const QSharedPointer<Options> &pOptions,
+    const QSharedPointer<Options>& pOptions,
     QStatusBar* pStatusBar)
     : QWidget(pParent)
 {
@@ -135,9 +135,10 @@ void MergeResultWindow::init(
 //At that point in startup we don't have a MergeResultWindow object so we cannot connect the signals yet.
 void MergeResultWindow::initActions(KActionCollection* ac)
 {
-    if(ac == nullptr) {
+    if(ac == nullptr)
+    {
         KMessageBox::error(nullptr, "actionCollection==0");
-        exit(-1);//we cannot recover from this.
+        exit(-1); //we cannot recover from this.
     }
 
     chooseAEverywhere = GuiUtils::createAction<QAction>(i18n("Choose A Everywhere"), QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_1), ac, "merge_choose_a_everywhere");
@@ -166,7 +167,7 @@ void MergeResultWindow::connectActions() const
     QObject::connect(chooseCForUnsolvedWhiteSpaceConflicts, &QAction::triggered, this, &MergeResultWindow::slotChooseCForUnsolvedWhiteSpaceConflicts);
 }
 
-void MergeResultWindow::setupConnections(const KDiff3App *app) const
+void MergeResultWindow::setupConnections(const KDiff3App* app) const
 {
     connect(app, &KDiff3App::cut, this, &MergeResultWindow::slotCut);
     connect(app, &KDiff3App::selectAll, this, &MergeResultWindow::slotSelectAll);
@@ -424,8 +425,8 @@ bool MergeResultWindow::sameKindCheck(const MergeLine& ml1, const MergeLine& ml2
     }
     else
         return (
-                   (!ml1.bConflict && !ml2.bConflict && ml1.bDelta && ml2.bDelta && ml1.srcSelect == ml2.srcSelect && (ml1.mergeDetails == ml2.mergeDetails || (ml1.mergeDetails != e_MergeDetails::eBCAddedAndEqual && ml2.mergeDetails != e_MergeDetails::eBCAddedAndEqual))) ||
-                   (!ml1.bDelta && !ml2.bDelta));
+            (!ml1.bConflict && !ml2.bConflict && ml1.bDelta && ml2.bDelta && ml1.srcSelect == ml2.srcSelect && (ml1.mergeDetails == ml2.mergeDetails || (ml1.mergeDetails != e_MergeDetails::eBCAddedAndEqual && ml2.mergeDetails != e_MergeDetails::eBCAddedAndEqual))) ||
+            (!ml1.bDelta && !ml2.bDelta));
 }
 
 void MergeResultWindow::merge(bool bAutoSolve, e_SrcSelector defaultSelector, bool bConflictsOnly, bool bWhiteSpaceOnly)
@@ -436,7 +437,7 @@ void MergeResultWindow::merge(bool bAutoSolve, e_SrcSelector defaultSelector, bo
         {
             int result = KMessageBox::warningYesNo(this,
                                                    i18n("The output has been modified.\n"
-                                                           "If you continue your changes will be lost."),
+                                                        "If you continue your changes will be lost."),
                                                    i18n("Warning"),
                                                    KStandardGuiItem::cont(),
                                                    KStandardGuiItem::cancel());
@@ -454,12 +455,12 @@ void MergeResultWindow::merge(bool bAutoSolve, e_SrcSelector defaultSelector, bo
 
             MergeLine ml;
             bool bLineRemoved;
-            d.mergeOneLine( ml.mergeDetails, ml.bConflict, bLineRemoved, ml.srcSelect, m_pldC == nullptr);
+            d.mergeOneLine(ml.mergeDetails, ml.bConflict, bLineRemoved, ml.srcSelect, m_pldC == nullptr);
 
             // Automatic solving for only whitespace changes.
             if(ml.bConflict &&
-                    ((m_pldC == nullptr && (d.isEqualAB() || (d.isWhiteLine(e_SrcSelector::A) && d.isWhiteLine(e_SrcSelector::B)))) ||
-                     (m_pldC != nullptr && ((d.isEqualAB() && d.isEqualAC()) || (d.isWhiteLine(e_SrcSelector::A) && d.isWhiteLine(e_SrcSelector::B) && d.isWhiteLine(e_SrcSelector::C))))))
+               ((m_pldC == nullptr && (d.isEqualAB() || (d.isWhiteLine(e_SrcSelector::A) && d.isWhiteLine(e_SrcSelector::B)))) ||
+                (m_pldC != nullptr && ((d.isEqualAB() && d.isEqualAC()) || (d.isWhiteLine(e_SrcSelector::A) && d.isWhiteLine(e_SrcSelector::B) && d.isWhiteLine(e_SrcSelector::C))))))
             {
                 ml.bWhiteSpaceConflict = true;
             }
@@ -678,7 +679,7 @@ int MergeResultWindow::getMaxTextWidth()
                 textLayout.endLayout();
                 if(m_maxTextWidth < textLayout.maximumWidth())
                 {
-                    m_maxTextWidth =  qCeil(textLayout.maximumWidth());
+                    m_maxTextWidth = qCeil(textLayout.maximumWidth());
                 }
             }
         }
@@ -1095,7 +1096,7 @@ void MergeResultWindow::choose(e_SrcSelector selector)
     }
 
     if(!bActive) // Selected source wasn't active.
-    {   // Append the lines from selected source here at rangeEnd.
+    {            // Append the lines from selected source here at rangeEnd.
         Diff3LineList::const_iterator d3llit = ml.id3l;
         int j;
 
@@ -1262,7 +1263,7 @@ QString calcHistorySortKey(const QString& keyOrder, QRegExp& matchedRegExpr, con
 }
 
 void MergeResultWindow::collectHistoryInformation(
-    e_SrcSelector src, Diff3LineList::const_iterator &iHistoryBegin, Diff3LineList::const_iterator &iHistoryEnd,
+    e_SrcSelector src, Diff3LineList::const_iterator& iHistoryBegin, Diff3LineList::const_iterator& iHistoryEnd,
     HistoryMap& historyMap,
     std::list<HistoryMap::iterator>& hitList // list of iterators
 )
@@ -1350,7 +1351,7 @@ MergeEditLineList& MergeResultWindow::HistoryMapEntry::choice(bool bThreeInputs)
         if(mellA.empty())
             return mellC.empty() ? mellB : mellC; // A doesn't exist, return one that exists
         else if(!mellB.empty() && !mellC.empty())
-        {   // A, B and C exist
+        { // A, B and C exist
             return mellA;
         }
         else
@@ -1366,7 +1367,7 @@ bool MergeResultWindow::HistoryMapEntry::staysInPlace(bool bThreeInputs, Diff3Li
     if(!bThreeInputs)
     {
         if(!mellA.empty() && !mellB.empty() && mellA.begin()->id3l() == mellB.begin()->id3l() &&
-                mellA.back().id3l() == iHistoryLast && mellB.back().id3l() == iHistoryLast)
+           mellA.back().id3l() == iHistoryLast && mellB.back().id3l() == iHistoryLast)
         {
             iHistoryEnd = mellA.begin()->id3l();
             return true;
@@ -1532,8 +1533,8 @@ void MergeResultWindow::slotRegExpAutoMerge()
         {
             Diff3LineList::const_iterator id3l = i->id3l;
             if(vcsKeywords.exactMatch(id3l->getString(e_SrcSelector::A)) &&
-                    vcsKeywords.exactMatch(id3l->getString(e_SrcSelector::B)) &&
-                    (m_pldC == nullptr || vcsKeywords.exactMatch(id3l->getString(e_SrcSelector::C))))
+               vcsKeywords.exactMatch(id3l->getString(e_SrcSelector::B)) &&
+               (m_pldC == nullptr || vcsKeywords.exactMatch(id3l->getString(e_SrcSelector::C))))
             {
                 MergeEditLine& mel = *i->mergeEditLineList.begin();
                 mel.setSource(m_pldC == nullptr ? e_SrcSelector::B : e_SrcSelector::C, false);
@@ -1795,9 +1796,9 @@ void MergeResultWindow::writeLine(
 
         if(line == m_cursorYPos)
         {
-            m_cursorXPixelPos =  qCeil(textLayout.lineAt(0).cursorToX(m_cursorXPos));
+            m_cursorXPixelPos = qCeil(textLayout.lineAt(0).cursorToX(m_cursorXPos));
             if(m_pOptions->m_bRightToLeftLanguage)
-                m_cursorXPixelPos +=  qCeil(textLayout.position().x() - m_horizScrollOffset);
+                m_cursorXPixelPos += qCeil(textLayout.position().x() - m_horizScrollOffset);
         }
 
         p.setClipping(false);
@@ -2078,9 +2079,9 @@ void MergeResultWindow::mousePressEvent(QMouseEvent* e)
             m_selection.end(line, pos);
         }
         m_cursorXPos = pos;
-        m_cursorXPixelPos =  qCeil(textLayout.lineAt(0).cursorToX(pos));
+        m_cursorXPixelPos = qCeil(textLayout.lineAt(0).cursorToX(pos));
         if(m_pOptions->m_bRightToLeftLanguage)
-            m_cursorXPixelPos +=  qCeil(textLayout.position().x() - m_horizScrollOffset);
+            m_cursorXPixelPos += qCeil(textLayout.position().x() - m_horizScrollOffset);
         m_cursorOldXPixelPos = m_cursorXPixelPos;
         m_cursorYPos = line;
 
@@ -2212,7 +2213,6 @@ void MergeResultWindow::slotCursorUpdate()
     m_cursorTimer.start(500);
 }
 
-
 void MergeResultWindow::wheelEvent(QWheelEvent* pWheelEvent)
 {
     QPoint delta = pWheelEvent->angleDelta();
@@ -2266,288 +2266,288 @@ void MergeResultWindow::keyPressEvent(QKeyEvent* e)
     // Special keys
     switch(e->key())
     {
-    case Qt::Key_Escape:
-    //case Qt::Key_Tab:
-    case Qt::Key_Backtab:
-        break;
-    case Qt::Key_Delete: {
-        if(deleteSelection2(str, x, y, mlIt, melIt) || !melIt->isEditableText()) break;
+        case Qt::Key_Escape:
+        //case Qt::Key_Tab:
+        case Qt::Key_Backtab:
+            break;
+        case Qt::Key_Delete: {
+            if(deleteSelection2(str, x, y, mlIt, melIt) || !melIt->isEditableText()) break;
 
-        if(x >= str.length())
-        {
-            if(y < m_nofLines - 1)
+            if(x >= str.length())
             {
-                setModified();
-                MergeLineList::iterator mlIt1;
-                MergeEditLineList::iterator melIt1;
-                calcIteratorFromLineNr(y + 1, mlIt1, melIt1);
-                if(melIt1->isEditableText())
+                if(y < m_nofLines - 1)
                 {
-                    QString s2 = melIt1->getString(m_pldA, m_pldB, m_pldC);
-                    melIt->setString(str + s2);
-
-                    // Remove the line
-                    if(mlIt1->mergeEditLineList.size() > 1)
-                        mlIt1->mergeEditLineList.erase(melIt1);
-                    else
-                        melIt1->setRemoved();
-                }
-            }
-        }
-        else
-        {
-            QString s = str.left(x);
-            s += str.midRef(x + 1);
-            melIt->setString(s);
-            setModified();
-        }
-        break;
-    }
-    case Qt::Key_Backspace: {
-        if(deleteSelection2(str, x, y, mlIt, melIt)) break;
-        if(!melIt->isEditableText()) break;
-        if(x == 0)
-        {
-            if(y > 0)
-            {
-                setModified();
-                MergeLineList::iterator mlIt1;
-                MergeEditLineList::iterator melIt1;
-                calcIteratorFromLineNr(y - 1, mlIt1, melIt1);
-                if(melIt1->isEditableText())
-                {
-                    QString s1 = melIt1->getString(m_pldA, m_pldB, m_pldC);
-                    melIt1->setString(s1 + str);
-
-                    // Remove the previous line
-                    if(mlIt->mergeEditLineList.size() > 1)
-                        mlIt->mergeEditLineList.erase(melIt);
-                    else
-                        melIt->setRemoved();
-
-                    --y;
-                    x = str.length();
-                }
-            }
-        }
-        else
-        {
-            QString s = str.left(x - 1);
-            s += str.midRef(x);
-            --x;
-            melIt->setString(s);
-            setModified();
-        }
-        break;
-    }
-    case Qt::Key_Return:
-    case Qt::Key_Enter: {
-        if(!melIt->isEditableText()) break;
-        deleteSelection2(str, x, y, mlIt, melIt);
-        setModified();
-        QString indentation;
-        if(m_pOptions->m_bAutoIndentation)
-        {   // calc last indentation
-            MergeLineList::iterator mlIt1 = mlIt;
-            MergeEditLineList::iterator melIt1 = melIt;
-            for(;;)
-            {
-                const QString s = melIt1->getString(m_pldA, m_pldB, m_pldC);
-                if(!s.isEmpty())
-                {
-                    int i;
-                    for(i = 0; i < s.length(); ++i)
+                    setModified();
+                    MergeLineList::iterator mlIt1;
+                    MergeEditLineList::iterator melIt1;
+                    calcIteratorFromLineNr(y + 1, mlIt1, melIt1);
+                    if(melIt1->isEditableText())
                     {
-                        if(s[i] != ' ' && s[i] != '\t') break;
+                        QString s2 = melIt1->getString(m_pldA, m_pldB, m_pldC);
+                        melIt->setString(str + s2);
+
+                        // Remove the line
+                        if(mlIt1->mergeEditLineList.size() > 1)
+                            mlIt1->mergeEditLineList.erase(melIt1);
+                        else
+                            melIt1->setRemoved();
                     }
-                    if(i < s.length())
-                    {
-                        indentation = s.left(i);
-                        break;
-                    }
-                }
-                // Go back one line
-                if(melIt1 != mlIt1->mergeEditLineList.begin())
-                    --melIt1;
-                else
-                {
-                    if(mlIt1 == m_mergeLineList.begin()) break;
-                    --mlIt1;
-                    melIt1 = mlIt1->mergeEditLineList.end();
-                    --melIt1;
-                }
-            }
-        }
-        MergeEditLine mel(mlIt->id3l); // Associate every mel with an id3l, even if not really valid.
-        mel.setString(indentation + str.mid(x));
-
-        if(x < str.length()) // Cut off the old line.
-        {
-            // Since ps possibly points into melIt->str, first copy it into a temporary.
-            QString temp = str.left(x);
-            melIt->setString(temp);
-        }
-
-        ++melIt;
-        mlIt->mergeEditLineList.insert(melIt, mel);
-        x = indentation.length();
-        ++y;
-        break;
-    }
-    case Qt::Key_Insert:
-        m_bInsertMode = !m_bInsertMode;
-        break;
-    case Qt::Key_Pause:
-    case Qt::Key_Print:
-    case Qt::Key_SysReq:
-        break;
-    case Qt::Key_Home:
-        x = 0;
-        if(bCtrl)
-        {
-            y = 0;
-        }
-        break; // cursor movement
-    case Qt::Key_End:
-        x = TYPE_MAX(int);
-        if(bCtrl)
-        {
-            y = TYPE_MAX(int);
-        }
-        break;
-
-    case Qt::Key_Left:
-    case Qt::Key_Right:
-        if((e->key() == Qt::Key_Left) != m_pOptions->m_bRightToLeftLanguage)
-        {
-            if(!bCtrl)
-            {
-                int newX = textLayoutOrig.previousCursorPosition(x);
-                if(newX == x && y > 0)
-                {
-                    --y;
-                    x = TYPE_MAX(int);
-                }
-                else
-                {
-                    x = newX;
                 }
             }
             else
             {
-                while(x > 0 && (str[x - 1] == ' ' || str[x - 1] == '\t'))
-                {
-                    int newX = textLayoutOrig.previousCursorPosition(x);
-                    if(newX == x) break;
-                    x = newX;
-                }
-                while(x > 0 && (str[x - 1] != ' ' && str[x - 1] != '\t'))
-                {
-                    int newX = textLayoutOrig.previousCursorPosition(x);
-                    if(newX == x) break;
-                    x = newX;
-                }
+                QString s = str.left(x);
+                s += str.midRef(x + 1);
+                melIt->setString(s);
+                setModified();
             }
+            break;
         }
-        else
-        {
-            if(!bCtrl)
+        case Qt::Key_Backspace: {
+            if(deleteSelection2(str, x, y, mlIt, melIt)) break;
+            if(!melIt->isEditableText()) break;
+            if(x == 0)
             {
-                int newX = textLayoutOrig.nextCursorPosition(x);
-                if(newX == x && y < m_nofLines - 1)
+                if(y > 0)
                 {
-                    ++y;
-                    x = 0;
-                }
-                else
-                {
-                    x = newX;
+                    setModified();
+                    MergeLineList::iterator mlIt1;
+                    MergeEditLineList::iterator melIt1;
+                    calcIteratorFromLineNr(y - 1, mlIt1, melIt1);
+                    if(melIt1->isEditableText())
+                    {
+                        QString s1 = melIt1->getString(m_pldA, m_pldB, m_pldC);
+                        melIt1->setString(s1 + str);
+
+                        // Remove the previous line
+                        if(mlIt->mergeEditLineList.size() > 1)
+                            mlIt->mergeEditLineList.erase(melIt);
+                        else
+                            melIt->setRemoved();
+
+                        --y;
+                        x = str.length();
+                    }
                 }
             }
             else
             {
-                while(x < str.length() && (str[x] == ' ' || str[x] == '\t'))
+                QString s = str.left(x - 1);
+                s += str.midRef(x);
+                --x;
+                melIt->setString(s);
+                setModified();
+            }
+            break;
+        }
+        case Qt::Key_Return:
+        case Qt::Key_Enter: {
+            if(!melIt->isEditableText()) break;
+            deleteSelection2(str, x, y, mlIt, melIt);
+            setModified();
+            QString indentation;
+            if(m_pOptions->m_bAutoIndentation)
+            { // calc last indentation
+                MergeLineList::iterator mlIt1 = mlIt;
+                MergeEditLineList::iterator melIt1 = melIt;
+                for(;;)
                 {
-                    int newX = textLayoutOrig.nextCursorPosition(x);
-                    if(newX == x) break;
-                    x = newX;
-                }
-                while(x < str.length() && (str[x] != ' ' && str[x] != '\t'))
-                {
-                    int newX = textLayoutOrig.nextCursorPosition(x);
-                    if(newX == x) break;
-                    x = newX;
+                    const QString s = melIt1->getString(m_pldA, m_pldB, m_pldC);
+                    if(!s.isEmpty())
+                    {
+                        int i;
+                        for(i = 0; i < s.length(); ++i)
+                        {
+                            if(s[i] != ' ' && s[i] != '\t') break;
+                        }
+                        if(i < s.length())
+                        {
+                            indentation = s.left(i);
+                            break;
+                        }
+                    }
+                    // Go back one line
+                    if(melIt1 != mlIt1->mergeEditLineList.begin())
+                        --melIt1;
+                    else
+                    {
+                        if(mlIt1 == m_mergeLineList.begin()) break;
+                        --mlIt1;
+                        melIt1 = mlIt1->mergeEditLineList.end();
+                        --melIt1;
+                    }
                 }
             }
-        }
-        break;
+            MergeEditLine mel(mlIt->id3l); // Associate every mel with an id3l, even if not really valid.
+            mel.setString(indentation + str.mid(x));
 
-    case Qt::Key_Up:
-        if(!bCtrl)
-        {
-            --y;
-            bYMoveKey = true;
-        }
-        break;
-    case Qt::Key_Down:
-        if(!bCtrl)
-        {
+            if(x < str.length()) // Cut off the old line.
+            {
+                // Since ps possibly points into melIt->str, first copy it into a temporary.
+                QString temp = str.left(x);
+                melIt->setString(temp);
+            }
+
+            ++melIt;
+            mlIt->mergeEditLineList.insert(melIt, mel);
+            x = indentation.length();
             ++y;
-            bYMoveKey = true;
+            break;
         }
-        break;
-    case Qt::Key_PageUp:
-        if(!bCtrl)
-        {
-            y -= getNofVisibleLines();
-            bYMoveKey = true;
-        }
-        break;
-    case Qt::Key_PageDown:
-        if(!bCtrl)
-        {
-            y += getNofVisibleLines();
-            bYMoveKey = true;
-        }
-        break;
-    default: {
-        QString t = e->text();
-        if(t.isEmpty() || bCtrl)
-        {
-            e->ignore();
-            return;
-        }
-        else
-        {
+        case Qt::Key_Insert:
+            m_bInsertMode = !m_bInsertMode;
+            break;
+        case Qt::Key_Pause:
+        case Qt::Key_Print:
+        case Qt::Key_SysReq:
+            break;
+        case Qt::Key_Home:
+            x = 0;
             if(bCtrl)
+            {
+                y = 0;
+            }
+            break; // cursor movement
+        case Qt::Key_End:
+            x = TYPE_MAX(int);
+            if(bCtrl)
+            {
+                y = TYPE_MAX(int);
+            }
+            break;
+
+        case Qt::Key_Left:
+        case Qt::Key_Right:
+            if((e->key() == Qt::Key_Left) != m_pOptions->m_bRightToLeftLanguage)
+            {
+                if(!bCtrl)
+                {
+                    int newX = textLayoutOrig.previousCursorPosition(x);
+                    if(newX == x && y > 0)
+                    {
+                        --y;
+                        x = TYPE_MAX(int);
+                    }
+                    else
+                    {
+                        x = newX;
+                    }
+                }
+                else
+                {
+                    while(x > 0 && (str[x - 1] == ' ' || str[x - 1] == '\t'))
+                    {
+                        int newX = textLayoutOrig.previousCursorPosition(x);
+                        if(newX == x) break;
+                        x = newX;
+                    }
+                    while(x > 0 && (str[x - 1] != ' ' && str[x - 1] != '\t'))
+                    {
+                        int newX = textLayoutOrig.previousCursorPosition(x);
+                        if(newX == x) break;
+                        x = newX;
+                    }
+                }
+            }
+            else
+            {
+                if(!bCtrl)
+                {
+                    int newX = textLayoutOrig.nextCursorPosition(x);
+                    if(newX == x && y < m_nofLines - 1)
+                    {
+                        ++y;
+                        x = 0;
+                    }
+                    else
+                    {
+                        x = newX;
+                    }
+                }
+                else
+                {
+                    while(x < str.length() && (str[x] == ' ' || str[x] == '\t'))
+                    {
+                        int newX = textLayoutOrig.nextCursorPosition(x);
+                        if(newX == x) break;
+                        x = newX;
+                    }
+                    while(x < str.length() && (str[x] != ' ' && str[x] != '\t'))
+                    {
+                        int newX = textLayoutOrig.nextCursorPosition(x);
+                        if(newX == x) break;
+                        x = newX;
+                    }
+                }
+            }
+            break;
+
+        case Qt::Key_Up:
+            if(!bCtrl)
+            {
+                --y;
+                bYMoveKey = true;
+            }
+            break;
+        case Qt::Key_Down:
+            if(!bCtrl)
+            {
+                ++y;
+                bYMoveKey = true;
+            }
+            break;
+        case Qt::Key_PageUp:
+            if(!bCtrl)
+            {
+                y -= getNofVisibleLines();
+                bYMoveKey = true;
+            }
+            break;
+        case Qt::Key_PageDown:
+            if(!bCtrl)
+            {
+                y += getNofVisibleLines();
+                bYMoveKey = true;
+            }
+            break;
+        default: {
+            QString t = e->text();
+            if(t.isEmpty() || bCtrl)
             {
                 e->ignore();
                 return;
             }
             else
             {
-                if(!melIt->isEditableText()) break;
-                deleteSelection2(str, x, y, mlIt, melIt);
-
-                setModified();
-                // Characters to insert
-                QString s = str;
-                if(t[0] == '\t' && m_pOptions->m_bReplaceTabs)
+                if(bCtrl)
                 {
-                    int spaces = (m_cursorXPos / m_pOptions->m_tabSize + 1) * m_pOptions->m_tabSize - m_cursorXPos;
-                    t.fill(' ', spaces);
+                    e->ignore();
+                    return;
                 }
-                if(m_bInsertMode)
-                    s.insert(x, t);
                 else
-                    s.replace(x, t.length(), t);
+                {
+                    if(!melIt->isEditableText()) break;
+                    deleteSelection2(str, x, y, mlIt, melIt);
 
-                melIt->setString(s);
-                x += t.length();
-                bShift = false;
+                    setModified();
+                    // Characters to insert
+                    QString s = str;
+                    if(t[0] == '\t' && m_pOptions->m_bReplaceTabs)
+                    {
+                        int spaces = (m_cursorXPos / m_pOptions->m_tabSize + 1) * m_pOptions->m_tabSize - m_cursorXPos;
+                        t.fill(' ', spaces);
+                    }
+                    if(m_bInsertMode)
+                        s.insert(x, t);
+                    else
+                        s.replace(x, t.length(), t);
+
+                    melIt->setString(s);
+                    x += t.length();
+                    bShift = false;
+                }
             }
         }
-    }
     }
 
     y = qBound(0, y, m_nofLines - 1);
@@ -2577,11 +2577,11 @@ void MergeResultWindow::keyPressEvent(QKeyEvent* e)
             x = textLayout.lineAt(0).xToCursor(m_cursorOldXPixelPos);
     }
 
-    m_cursorXPixelPos =  qCeil(textLayout.lineAt(0).cursorToX(x));
+    m_cursorXPixelPos = qCeil(textLayout.lineAt(0).cursorToX(x));
     int hF = 1; // horizontal factor
     if(m_pOptions->m_bRightToLeftLanguage)
     {
-        m_cursorXPixelPos +=  qCeil(textLayout.position().x() - m_horizScrollOffset);
+        m_cursorXPixelPos += qCeil(textLayout.position().x() - m_horizScrollOffset);
         hF = -1;
     }
     int cursorWidth = 5;
@@ -2607,7 +2607,7 @@ void MergeResultWindow::keyPressEvent(QKeyEvent* e)
     // TODO if width of current line exceeds the current maximum width then force recalculating the scrollbars
     if(textLayout.maximumWidth() > getMaxTextWidth())
     {
-        m_maxTextWidth =  qCeil(textLayout.maximumWidth());
+        m_maxTextWidth = qCeil(textLayout.maximumWidth());
         Q_EMIT resizeSignal();
     }
     if(!bYMoveKey)
@@ -2708,7 +2708,7 @@ QString MergeResultWindow::getSelection()
 }
 
 bool MergeResultWindow::deleteSelection2(QString& s, int& x, int& y,
-        MergeLineList::iterator& mlIt, MergeEditLineList::iterator& melIt)
+                                         MergeLineList::iterator& mlIt, MergeEditLineList::iterator& melIt)
 {
     if(m_selection.selectionContainsData())
     {
@@ -2851,7 +2851,7 @@ void MergeResultWindow::pasteClipboard(bool bFromSelection)
     for(i = 0; i < len; ++i)
     {
         QChar c = clipBoard[i];
-        if(c == '\n' || (c == '\r' && clipBoard[i+1] != '\n'))
+        if(c == '\n' || (c == '\r' && clipBoard[i + 1] != '\n'))
         {
             melIt->setString(currentLine);
             MergeEditLine mel(mlIt->id3l); // Associate every mel with an id3l, even if not really valid.
@@ -3035,7 +3035,7 @@ void MergeResultWindow::setSelection(int firstLine, int startPos, int lastLine, 
     update();
 }
 
-WindowTitleWidget::WindowTitleWidget(const QSharedPointer<Options> &pOptions)
+WindowTitleWidget::WindowTitleWidget(const QSharedPointer<Options>& pOptions)
 {
     m_pOptions = pOptions;
     setAutoFillBackground(true);
@@ -3049,7 +3049,7 @@ WindowTitleWidget::WindowTitleWidget(const QSharedPointer<Options> &pOptions)
 
     m_pFileNameLineEdit = new FileNameLineEdit();
     pHLayout->addWidget(m_pFileNameLineEdit, 6);
-    m_pFileNameLineEdit->installEventFilter(this);//for focus tracking
+    m_pFileNameLineEdit->installEventFilter(this); //for focus tracking
     m_pFileNameLineEdit->setAcceptDrops(true);
     m_pFileNameLineEdit->setReadOnly(true);
 
@@ -3188,7 +3188,7 @@ void WindowTitleWidget::setEncodings(QTextCodec* pCodecForA, QTextCodec* pCodecF
     // First sort codec names:
     std::map<QString, QTextCodec*> names;
     QList<int> mibs = QTextCodec::availableMibs();
-    for(int i: mibs)
+    for(int i : mibs)
     {
         QTextCodec* c = QTextCodec::codecForMib(i);
         if(c != nullptr)

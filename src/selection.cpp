@@ -10,7 +10,7 @@
 
 #include "TypeUtils.h"
 
-#include <utility>   // for swap
+#include <utility> // for swap
 
 #include <QtGlobal>
 

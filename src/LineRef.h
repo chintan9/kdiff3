@@ -1,6 +1,6 @@
 /*
  * KDiff3 - Text Diff And Merge Tool
- * 
+ *
  * SPDX-FileCopyrightText: 2018-2020 Michael Reeves reeves.87@gmail.com
  * SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -16,10 +16,12 @@
 
 class LineRef
 {
-  public:
+public:
     typedef qint32 LineType;
     inline LineRef() = default;
-    inline LineRef(const LineType i) { mLineNumber = i; }
+    inline LineRef(const LineType i) {
+        mLineNumber = i;
+    }
     inline LineRef(const qint64 i)
     {
         if(i <= TYPE_MAX(LineType))
@@ -27,7 +29,9 @@ class LineRef
         else
             mLineNumber = -1;
     }
-    inline operator LineType() const { return mLineNumber; }
+    inline operator LineType() const {
+        return mLineNumber;
+    }
     inline LineRef& operator=(const LineType lineIn) {
         mLineNumber = lineIn;
         return *this;
@@ -63,10 +67,14 @@ class LineRef
         --mLineNumber;
         return line;
     };
-    inline void invalidate() { mLineNumber = -1; }
-    inline bool isValid() const { return mLineNumber != -1; }
+    inline void invalidate() {
+        mLineNumber = -1;
+    }
+    inline bool isValid() const {
+        return mLineNumber != -1;
+    }
 
-  private:
+private:
     LineType mLineNumber = -1;
 };
 

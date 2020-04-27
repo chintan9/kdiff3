@@ -14,7 +14,7 @@
 
 class MergeEditLine
 {
-  public:
+public:
     explicit MergeEditLine(const Diff3LineList::const_iterator& i, e_SrcSelector src = e_SrcSelector::None)
     {
         m_id3l = i;
@@ -29,7 +29,9 @@ class MergeEditLine
         mChanged = false;
         m_str = QString();
     }
-    bool isConflict() { return m_src == e_SrcSelector::None && !m_bLineRemoved && !mChanged; }
+    bool isConflict() {
+        return m_src == e_SrcSelector::None && !m_bLineRemoved && !mChanged;
+    }
     void setRemoved(e_SrcSelector src = e_SrcSelector::None)
     {
         m_src = src;
@@ -37,8 +39,12 @@ class MergeEditLine
         m_str = QString();
         mChanged = (src == e_SrcSelector::None);
     }
-    bool isRemoved() const { return m_bLineRemoved; }
-    bool isEditableText() { return !isConflict(); }
+    bool isRemoved() const {
+        return m_bLineRemoved;
+    }
+    bool isEditableText() {
+        return !isConflict();
+    }
     void setString(const QString& s)
     {
         m_str = s;
@@ -47,7 +53,9 @@ class MergeEditLine
         mChanged = true;
     }
     QString getString(const QVector<LineData>* pLineDataA, const QVector<LineData>* pLineDataB, const QVector<LineData>* pLineDataC);
-    bool isModified() { return mChanged; }
+    bool isModified() {
+        return mChanged;
+    }
 
     void setSource(e_SrcSelector src, bool bLineRemoved)
     {
@@ -61,9 +69,13 @@ class MergeEditLine
             m_str=QLatin1String("");
         }
     }
-    e_SrcSelector src() { return m_src; }
-    Diff3LineList::const_iterator id3l() { return m_id3l; }
-  private:
+    e_SrcSelector src() {
+        return m_src;
+    }
+    Diff3LineList::const_iterator id3l() {
+        return m_id3l;
+    }
+private:
     Diff3LineList::const_iterator m_id3l;
     e_SrcSelector m_src; // 1, 2 or 3 for A, B or C respectively, or 0 when line is from neither source.
     QString m_str;       // String when modified by user or null-string when orig data is used.
@@ -73,10 +85,10 @@ class MergeEditLine
 
 class MergeEditLineList :public std::list<MergeEditLine>
 {
-  private:
+private:
     typedef std::list<MergeEditLine> BASE;
 
-  public:
+public:
     typedef std::list<MergeEditLine>::iterator iterator;
     typedef std::list<MergeEditLine>::reverse_iterator reverse_iterator;
     typedef std::list<MergeEditLine>::const_iterator const_iterator;
@@ -90,7 +102,7 @@ class MergeEditLineList :public std::list<MergeEditLine>
 
 class MergeLine
 {
-  public:
+public:
     Diff3LineList::const_iterator id3l;
     LineIndex d3lLineIdx = -1;    // Needed to show the correct window pos.
     LineCount srcRangeLength = 0; // how many src-lines have this properties

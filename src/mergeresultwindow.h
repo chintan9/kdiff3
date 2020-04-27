@@ -34,7 +34,7 @@ class KDiff3App;
 class MergeResultWindow : public QWidget
 {
     Q_OBJECT
-  public:
+public:
     static QScrollBar* mVScrollBar;
 
     MergeResultWindow(QWidget* pParent, const QSharedPointer<Options>& pOptions, QStatusBar* pStatusBar);
@@ -84,7 +84,7 @@ class MergeResultWindow : public QWidget
 
     void slotUpdateAvailabilities(const KDiff3App* app);
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void setOverviewMode(e_OverviewMode eOverviewMode);
     void setFirstLine(QtNumberType firstLine);
     void setHorizScrollOffset(int horizScrollOffset);
@@ -109,15 +109,33 @@ class MergeResultWindow : public QWidget
     void updateSourceMask();
     void slotStatusMessageChanged(const QString&);
 
-    void slotChooseAEverywhere() { chooseGlobal(e_SrcSelector::A, false, false); }
-    void slotChooseBEverywhere() { chooseGlobal(e_SrcSelector::B, false, false); }
-    void slotChooseCEverywhere() { chooseGlobal(e_SrcSelector::C, false, false); }
-    void slotChooseAForUnsolvedConflicts() { chooseGlobal(e_SrcSelector::A, true, false); }
-    void slotChooseBForUnsolvedConflicts() { chooseGlobal(e_SrcSelector::B, true, false); }
-    void slotChooseCForUnsolvedConflicts() { chooseGlobal(e_SrcSelector::C, true, false); }
-    void slotChooseAForUnsolvedWhiteSpaceConflicts() { chooseGlobal(e_SrcSelector::A, true, true); }
-    void slotChooseBForUnsolvedWhiteSpaceConflicts() { chooseGlobal(e_SrcSelector::B, true, true); }
-    void slotChooseCForUnsolvedWhiteSpaceConflicts() { chooseGlobal(e_SrcSelector::C, true, true); }
+    void slotChooseAEverywhere() {
+        chooseGlobal(e_SrcSelector::A, false, false);
+    }
+    void slotChooseBEverywhere() {
+        chooseGlobal(e_SrcSelector::B, false, false);
+    }
+    void slotChooseCEverywhere() {
+        chooseGlobal(e_SrcSelector::C, false, false);
+    }
+    void slotChooseAForUnsolvedConflicts() {
+        chooseGlobal(e_SrcSelector::A, true, false);
+    }
+    void slotChooseBForUnsolvedConflicts() {
+        chooseGlobal(e_SrcSelector::B, true, false);
+    }
+    void slotChooseCForUnsolvedConflicts() {
+        chooseGlobal(e_SrcSelector::C, true, false);
+    }
+    void slotChooseAForUnsolvedWhiteSpaceConflicts() {
+        chooseGlobal(e_SrcSelector::A, true, true);
+    }
+    void slotChooseBForUnsolvedWhiteSpaceConflicts() {
+        chooseGlobal(e_SrcSelector::B, true, true);
+    }
+    void slotChooseCForUnsolvedWhiteSpaceConflicts() {
+        chooseGlobal(e_SrcSelector::C, true, true);
+    }
     void slotRefresh();
 
     void slotResize();
@@ -126,7 +144,7 @@ class MergeResultWindow : public QWidget
 
     void slotSelectAll();
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void statusBarMessage(const QString& message);
     void scrollVertically(QtNumberType deltaY);
     void scrollMergeResultWindow(int deltaX, int deltaY);
@@ -140,7 +158,7 @@ class MergeResultWindow : public QWidget
     void showPopupMenu(const QPoint& point);
     void noRelevantChangesDetected();
 
-  private:
+private:
     void merge(bool bAutoSolve, e_SrcSelector defaultSelector, bool bConflictsOnly = false, bool bWhiteSpaceOnly = false);
     QString getString(int lineIdx);
     void showUnsolvedConflictsStatusMessage();
@@ -171,7 +189,7 @@ class MergeResultWindow : public QWidget
     e_OverviewMode mOverviewMode;
     QString m_persistentStatusMessage;
 
-  private:
+private:
     static bool sameKindCheck(const MergeLine& ml1, const MergeLine& ml2);
     struct HistoryMapEntry {
         MergeEditLineList mellA;
@@ -264,10 +282,10 @@ class MergeResultWindow : public QWidget
     bool deleteSelection2(QString& str, int& x, int& y,
                           MergeLineList::iterator& mlIt, MergeEditLineList::iterator& melIt);
     bool doRelevantChangesExist();
-  public Q_SLOTS:
+public Q_SLOTS:
     void deleteSelection();
     void pasteClipboard(bool bFromSelection);
-  private Q_SLOTS:
+private Q_SLOTS:
     void slotCursorUpdate();
 };
 
@@ -279,7 +297,7 @@ class QLabel;
 class WindowTitleWidget : public QWidget
 {
     Q_OBJECT
-  private:
+private:
     QLabel*      m_pLabel;
     FileNameLineEdit*   m_pFileNameLineEdit;
     //QPushButton* m_pBrowseButton;
@@ -290,7 +308,7 @@ class WindowTitleWidget : public QWidget
     QComboBox*   m_pEncodingSelector;
     QSharedPointer<Options> m_pOptions;
 
-  public:
+public:
     explicit WindowTitleWidget(const QSharedPointer<Options>& pOptions);
     QTextCodec* getEncoding();
     void setFileName(const QString& fileName);
@@ -301,7 +319,7 @@ class WindowTitleWidget : public QWidget
     e_LineEndStyle getLineEndStyle();
 
     bool eventFilter(QObject* o, QEvent* e) override;
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotSetModified(bool bModified);
     //private Q_SLOTS:
     //   void slotBrowseButtonClicked();

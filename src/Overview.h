@@ -29,7 +29,7 @@ enum class e_OverviewMode
 class Overview : public QWidget
 {
     Q_OBJECT
-  public:
+public:
     explicit Overview(const QSharedPointer<Options> &pOptions);
 
     void init(Diff3LineList* pDiff3LineList);
@@ -39,14 +39,14 @@ class Overview : public QWidget
 
     e_OverviewMode getOverviewMode();
 
-  public Q_SLOTS:
+public Q_SLOTS:
     void setOverviewMode(e_OverviewMode eOverviewMode);
     void setFirstLine(QtNumberType firstLine);
     void slotRedraw();
-  Q_SIGNALS:
+Q_SIGNALS:
     void setLine(LineRef);
 
-  private:
+private:
     const Diff3LineList* m_pDiff3LineList;
     QSharedPointer<Options> m_pOptions;
     LineRef m_firstLine;

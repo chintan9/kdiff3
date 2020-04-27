@@ -34,7 +34,10 @@ struct and
 
 #ifdef BOOST_NO_EXCEPTIONS
 //Because boost doesn't define this
-inline void boost::throw_exception(std::exception const& e) { Q_UNUSED(e); std::terminate();}
+inline void boost::throw_exception(std::exception const& e) {
+    Q_UNUSED(e);
+    std::terminate();
+}
 #endif
 
 #endif // !COMBINERS_H

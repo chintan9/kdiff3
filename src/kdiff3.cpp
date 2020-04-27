@@ -313,7 +313,7 @@ KDiff3App::KDiff3App(QWidget* pParent, const QString& name, KDiff3Part* pKDiff3P
         slotViewStatusBar();
 
         KToolBar *mainToolBar = toolBar(MAIN_TOOLBAR_NAME);
-        if(mainToolBar != nullptr){
+        if(mainToolBar != nullptr) {
             mainToolBar->mainWindow()->addToolBar(m_pOptions->getToolbarPos(), mainToolBar);
         }
         //   TODO restore window size/pos?
@@ -469,8 +469,8 @@ void KDiff3App::completeInit(const QString& fn1, const QString& fn2, const QStri
     {
         bool bFileOpenError = false;
         if((!m_sd1->isEmpty() && !m_sd1->hasData()) ||
-           (!m_sd2->isEmpty() && !m_sd2->hasData()) ||
-           (!m_sd3->isEmpty() && !m_sd3->hasData()))
+                (!m_sd2->isEmpty() && !m_sd2->hasData()) ||
+                (!m_sd3->isEmpty() && !m_sd3->hasData()))
         {
             QString text(i18n("Opening of these files failed:"));
             text += "\n\n";
@@ -504,7 +504,7 @@ KDiff3App::~KDiff3App()
 
 void KDiff3App::initActions(KActionCollection* ac)
 {
-    if(ac == nullptr){
+    if(ac == nullptr) {
         KMessageBox::error(nullptr, "actionCollection==0");
         exit(-1);//we cannot recover from this.
     }
@@ -673,10 +673,10 @@ bool KDiff3App::queryClose()
     if(m_bOutputModified)
     {
         int result = KMessageBox::warningYesNoCancel(this,
-                                                     i18n("The merge result has not been saved."),
-                                                     i18n("Warning"),
-                                                     KGuiItem(i18n("Save && Quit")),
-                                                     KGuiItem(i18n("Quit Without Saving")));
+                     i18n("The merge result has not been saved."),
+                     i18n("Warning"),
+                     KGuiItem(i18n("Save && Quit")),
+                     KGuiItem(i18n("Quit Without Saving")));
         if(result == KMessageBox::Cancel)
             return false;
         else if(result == KMessageBox::Yes)
@@ -957,7 +957,7 @@ void KDiff3App::slotFilePrint()
                 painter.setPen(m_pOptions->m_fgColor);
                 painter.drawLine(0, view.bottom() + 3, view.width(), view.bottom() + 3);
                 QString s = bPrintCurrentPage ? QString("")
-                                              : QString::number(page) + '/' + QString::number(totalNofPages);
+                            : QString::number(page) + '/' + QString::number(totalNofPages);
                 if(bPrintSelection) s += i18n(" (Selection)");
                 painter.drawText((view.right() - Utils::getHorizontalAdvance(painter.fontMetrics(), s)) / 2,
                                  view.bottom() + painter.fontMetrics().ascent() + 5, s);

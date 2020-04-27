@@ -62,7 +62,7 @@ class ReversibleScrollBar : public QScrollBar
     bool* m_pbRightToLeftLanguage;
     int m_realVal;
 
-  public:
+public:
     ReversibleScrollBar(Qt::Orientation o, bool* pbRightToLeftLanguage)
         : QScrollBar(o)
     {
@@ -70,7 +70,9 @@ class ReversibleScrollBar : public QScrollBar
         m_realVal = 0;
         connect(this, &ReversibleScrollBar::valueChanged, this, &ReversibleScrollBar::slotValueChanged);
     }
-    void setAgain() { setValue(m_realVal); }
+    void setAgain() {
+        setValue(m_realVal);
+    }
 
     void setValue(int i)
     {
@@ -84,7 +86,7 @@ class ReversibleScrollBar : public QScrollBar
     {
         return m_realVal;
     }
-  public Q_SLOTS:
+public Q_SLOTS:
     void slotValueChanged(int i)
     {
         m_realVal = i;
@@ -93,7 +95,7 @@ class ReversibleScrollBar : public QScrollBar
         Q_EMIT valueChanged2(m_realVal);
     }
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void valueChanged2(int);
 };
 
@@ -101,7 +103,7 @@ class KDiff3App : public QSplitter
 {
     Q_OBJECT
 
-  public:
+public:
     /** constructor of KDiff3App, calls all init functions to create the application.
      */
     KDiff3App(QWidget* parent, const QString& name, KDiff3Part* pKDiff3Part);
@@ -132,12 +134,14 @@ class KDiff3App : public QSplitter
     virtual bool isFileSaved() const;
     virtual bool isDirComparison() const;
 
-    static bool isTripleDiff() { return m_bTripleDiff; }
+    static bool isTripleDiff() {
+        return m_bTripleDiff;
+    }
 
     KActionCollection* actionCollection() const;
 
     static boost::signals2::signal<bool (), and> shouldContinue;
-  Q_SIGNALS:
+Q_SIGNALS:
     void createNewInstance(const QString& fn1, const QString& fn2, const QString& fn3);
 
     void sigRecalcWordWrap();
@@ -280,7 +284,7 @@ public Q_SLOTS:
 
     void setHScrollBarRange();
 
-  protected:
+protected:
     void setLockPainting(bool bLock);
     void createCaption();
     void initDirectoryMergeActions();
@@ -290,7 +294,7 @@ public Q_SLOTS:
     /** creates the centerwidget of the KMainWindow instance and sets it as the view */
     void initView();
 
-  private:
+private:
     void mainInit(TotalDiffStatus* pTotalDiffStatus = nullptr, bool bLoadFiles = true, bool bUseCurrentEncoding = false);
 
     void mainWindowEnable(bool bEnable);

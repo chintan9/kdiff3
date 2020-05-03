@@ -10,8 +10,8 @@
 
 #include "Logging.h"
 
-#include <stdio.h>// for fileno, stderr
-#include <stdlib.h>// for exit
+#include <stdio.h>  // for fileno, stderr
+#include <stdlib.h> // for exit
 
 #ifndef Q_OS_WIN
 #include <unistd.h>
@@ -26,8 +26,8 @@
 #include <QCommandLineOption>
 #include <QCommandLineParser>
 #include <QFile>
-#include <QStringList>
 #include <QStandardPaths>
+#include <QStringList>
 #include <QTextStream>
 
 void initialiseCmdLineArgs(QCommandLineParser* cmdLineParser)
@@ -63,7 +63,8 @@ void initialiseCmdLineArgs(QCommandLineParser* cmdLineParser)
             ignorableOption.remove('-');
             if(!ignorableOption.isEmpty())
             {
-                if(ignorableOption.length() == 1) {
+                if(ignorableOption.length() == 1)
+                {
                     cmdLineParser->addOption(QCommandLineOption({ignorableOption, QLatin1String("ignore")}, i18n("Ignored. (User defined.)")));
                 }
                 else
@@ -137,7 +138,7 @@ int main(int argc, char* argv[])
     bool isAtty = true;
 
 #ifndef Q_OS_WIN
-    isAtty = isatty(fileno(stderr)) == 1;//will be true for redirected output as well
+    isAtty = isatty(fileno(stderr)) == 1; //will be true for redirected output as well
 #endif
     /*
         QCommandLineParser::process does what is expected on windows or when running from a commandline.
@@ -160,12 +161,14 @@ int main(int argc, char* argv[])
             exit(1);
         }
 
-        if(cmdLineParser->isSet(QStringLiteral("version"))) {
+        if(cmdLineParser->isSet(QStringLiteral("version")))
+        {
             KMessageBox::information(nullptr,
                                      aboutData.displayName() + ' ' + aboutData.version(), aboutData.displayName());
             exit(0);
         }
-        if(cmdLineParser->isSet(QStringLiteral("help"))) {
+        if(cmdLineParser->isSet(QStringLiteral("help")))
+        {
             KMessageBox::information(nullptr, "<html><head/><body><pre>" + cmdLineParser->helpText() + "</pre></body></html>", aboutData.displayName());
 
             exit(0);
@@ -183,4 +186,3 @@ int main(int argc, char* argv[])
      QApplication::clipboard()->clear(); // Patch for Ubuntu: Fix issue with Qt clipboard*/
     return retVal;
 }
-

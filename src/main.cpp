@@ -162,7 +162,7 @@ int main(int argc, char* argv[])
 
         if(cmdLineParser->isSet(QStringLiteral("version"))) {
             KMessageBox::information(nullptr,
-                                    aboutData.displayName() + ' ' + aboutData.version(), aboutData.displayName());
+                                     aboutData.displayName() + ' ' + aboutData.version(), aboutData.displayName());
             exit(0);
         }
         if(cmdLineParser->isSet(QStringLiteral("help"))) {

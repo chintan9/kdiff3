@@ -61,7 +61,7 @@ void Overview::setRange(QtNumberType firstLine, QtNumberType pageHeight)
 void Overview::setFirstLine(QtNumberType firstLine)
 {
     QScrollBar *scrollBar = qobject_cast<QScrollBar *>(sender());
-    
+
     if(Q_UNLIKELY(scrollBar == nullptr))
     {
         m_firstLine = firstLine;

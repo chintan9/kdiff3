@@ -1,9 +1,6 @@
 {
     "KPlugin": {
-        "MimeTypes": [
-            "application/octet-stream",
-            "inode/directory"
-        ],
+        "MimeTypes": ["application/octet-stream", "inode/directory"],
         "Name": "Compare/Merge Files/Folders with KDiff3",
         "Name[ca@valencia]": "Compara/fusiona fitxers/carpetes amb el KDiff3",
         "Name[ca]": "Compara/fusiona fitxers/carpetes amb el KDiff3",
@@ -11,6 +8,7 @@
         "Name[en_GB]": "Compare/Merge Files/Folders with KDiff3",
         "Name[es]": "Comparar o fusionar archivos o carpetas con KDiff3",
         "Name[et]": "Failide/kataloogide võrdlemine/ühendamine KDiff3 abil",
+        "Name[eu]": "Alderatu/bateratu fitxategiak/direktorioak KDiff3 erabiliz",
         "Name[ia]": "Compara/Fusiona Files/Dossieres con KDiff3",
         "Name[it]": "Confronta e fonde i file o le cartelle con KDiff3",
         "Name[ko]": "KDiff3으로 파일과 폴더를 비교하거나 병합",
@@ -20,9 +18,7 @@
         "Name[sv]": "Jämför/Sammanfoga filer/kataloger med Kdiff3",
         "Name[uk]": "Порівняння та об'єднання файлів та тек за допомогою KDiff3",
         "Name[x-test]": "xxCompare/Merge Files/Folders with KDiff3xx",
-        "ServiceTypes": [
-            "KFileItemAction/Plugin"
-        ]
+        "ServiceTypes": ["KFileItemAction/Plugin"]
     },
     "MimeType": "application/octet-stream;inode/directory;",
     "X-KDE-Submenu": "KDiff3",

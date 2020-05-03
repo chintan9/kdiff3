@@ -8,11 +8,11 @@
 
 #include "mergeresultwindow.h"
 
+#include "RLPainter.h"
+#include "Utils.h" // for Utils
+#include "guiutils.h"
 #include "kdiff3.h"
 #include "options.h"
-#include "RLPainter.h"
-#include "guiutils.h"
-#include "Utils.h"             // for Utils
 
 #include <QAction>
 #include <QApplication>
@@ -29,7 +29,6 @@
 #include <QKeyEvent>
 #include <QLabel>
 #include <QLineEdit>
-#include <QtMath>
 #include <QMouseEvent>
 #include <QPaintEvent>
 #include <QPainter>
@@ -44,6 +43,7 @@
 #include <QTimerEvent>
 #include <QUrl>
 #include <QWheelEvent>
+#include <QtMath>
 
 #include <KActionCollection>
 #include <KLocalizedString>
@@ -65,7 +65,7 @@ QPointer<QAction> MergeResultWindow::chooseCForUnsolvedWhiteSpaceConflicts;
 
 MergeResultWindow::MergeResultWindow(
     QWidget* pParent,
-    const QSharedPointer<Options> &pOptions,
+    const QSharedPointer<Options>& pOptions,
     QStatusBar* pStatusBar)
     : QWidget(pParent)
 {
@@ -135,9 +135,10 @@ void MergeResultWindow::init(
 //At that point in startup we don't have a MergeResultWindow object so we cannot connect the signals yet.
 void MergeResultWindow::initActions(KActionCollection* ac)
 {
-    if(ac == nullptr){
+    if(ac == nullptr)
+    {
         KMessageBox::error(nullptr, "actionCollection==0");
-        exit(-1);//we cannot recover from this.
+        exit(-1); //we cannot recover from this.
     }
 
     chooseAEverywhere = GuiUtils::createAction<QAction>(i18n("Choose A Everywhere"), QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_1), ac, "merge_choose_a_everywhere");
@@ -166,7 +167,7 @@ void MergeResultWindow::connectActions() const
     QObject::connect(chooseCForUnsolvedWhiteSpaceConflicts, &QAction::triggered, this, &MergeResultWindow::slotChooseCForUnsolvedWhiteSpaceConflicts);
 }
 
-void MergeResultWindow::setupConnections(const KDiff3App *app)
+void MergeResultWindow::setupConnections(const KDiff3App* app)
 {
     connect(app, &KDiff3App::cut, this, &MergeResultWindow::slotCut);
     connect(app, &KDiff3App::selectAll, this, &MergeResultWindow::slotSelectAll);
@@ -456,7 +457,7 @@ void MergeResultWindow::merge(bool bAutoSolve, e_SrcSelector defaultSelector, bo
 
             MergeLine ml;
             bool bLineRemoved;
-            d.mergeOneLine( ml.mergeDetails, ml.bConflict, bLineRemoved, ml.srcSelect, m_pldC == nullptr);
+            d.mergeOneLine(ml.mergeDetails, ml.bConflict, bLineRemoved, ml.srcSelect, m_pldC == nullptr);
 
             // Automatic solving for only whitespace changes.
             if(ml.bConflict &&
@@ -680,7 +681,7 @@ int MergeResultWindow::getMaxTextWidth()
                 textLayout.endLayout();
                 if(m_maxTextWidth < textLayout.maximumWidth())
                 {
-                    m_maxTextWidth =  qCeil(textLayout.maximumWidth());
+                    m_maxTextWidth = qCeil(textLayout.maximumWidth());
                 }
             }
         }
@@ -1264,7 +1265,7 @@ QString calcHistorySortKey(const QString& keyOrder, QRegExp& matchedRegExpr, con
 }
 
 void MergeResultWindow::collectHistoryInformation(
-    e_SrcSelector src, Diff3LineList::const_iterator &iHistoryBegin, Diff3LineList::const_iterator &iHistoryEnd,
+    e_SrcSelector src, Diff3LineList::const_iterator& iHistoryBegin, Diff3LineList::const_iterator& iHistoryEnd,
     HistoryMap& historyMap,
     std::list<HistoryMap::iterator>& hitList // list of iterators
 )
@@ -1797,9 +1798,9 @@ void MergeResultWindow::writeLine(
 
         if(line == m_cursorYPos)
         {
-            m_cursorXPixelPos =  qCeil(textLayout.lineAt(0).cursorToX(m_cursorXPos));
+            m_cursorXPixelPos = qCeil(textLayout.lineAt(0).cursorToX(m_cursorXPos));
             if(m_pOptions->m_bRightToLeftLanguage)
-                m_cursorXPixelPos +=  qCeil(textLayout.position().x() - m_horizScrollOffset);
+                m_cursorXPixelPos += qCeil(textLayout.position().x() - m_horizScrollOffset);
         }
 
         p.setClipping(false);
@@ -1854,8 +1855,8 @@ void MergeResultWindow::writeLine(
     {
         p.fillRect(xOffset + 3, yOffset, 3, fontHeight, m_pOptions->m_fgColor);
         /*      p.setPen( blue );
-      p.drawLine( xOffset+2, yOffset, xOffset+2, yOffset+fontHeight-1 );
-      p.drawLine( xOffset+3, yOffset, xOffset+3, yOffset+fontHeight-1 );*/
+        p.drawLine( xOffset+2, yOffset, xOffset+2, yOffset+fontHeight-1 );
+        p.drawLine( xOffset+3, yOffset, xOffset+3, yOffset+fontHeight-1 );*/
     }
 }
 
@@ -1883,8 +1884,12 @@ void MergeResultWindow::paintEvent(QPaintEvent*)
     if(!m_bCursorUpdate) // Don't redraw everything for blinking cursor?
     {
         m_selection.bSelectionContainsData = false;
-        if(size() != m_pixmap.size())
-            m_pixmap = QPixmap(size());
+        const auto dpr = devicePixelRatioF();
+        if(size() * dpr != m_pixmap.size())
+        {
+            m_pixmap = QPixmap(size() * dpr);
+            m_pixmap.setDevicePixelRatio(dpr);
+        }
 
         RLPainter p(&m_pixmap, m_pOptions->m_bRightToLeftLanguage, width(), fontWidth);
         p.setFont(font());
@@ -2080,9 +2085,9 @@ void MergeResultWindow::mousePressEvent(QMouseEvent* e)
             m_selection.end(line, pos);
         }
         m_cursorXPos = pos;
-        m_cursorXPixelPos =  qCeil(textLayout.lineAt(0).cursorToX(pos));
+        m_cursorXPixelPos = qCeil(textLayout.lineAt(0).cursorToX(pos));
         if(m_pOptions->m_bRightToLeftLanguage)
-            m_cursorXPixelPos +=  qCeil(textLayout.position().x() - m_horizScrollOffset);
+            m_cursorXPixelPos += qCeil(textLayout.position().x() - m_horizScrollOffset);
         m_cursorOldXPixelPos = m_cursorXPixelPos;
         m_cursorYPos = line;
 
@@ -2215,7 +2220,6 @@ void MergeResultWindow::slotCursorUpdate()
 
     m_cursorTimer.start(500);
 }
-
 
 void MergeResultWindow::wheelEvent(QWheelEvent* pWheelEvent)
 {
@@ -2581,11 +2585,11 @@ void MergeResultWindow::keyPressEvent(QKeyEvent* e)
             x = textLayout.lineAt(0).xToCursor(m_cursorOldXPixelPos);
     }
 
-    m_cursorXPixelPos =  qCeil(textLayout.lineAt(0).cursorToX(x));
+    m_cursorXPixelPos = qCeil(textLayout.lineAt(0).cursorToX(x));
     int hF = 1; // horizontal factor
     if(m_pOptions->m_bRightToLeftLanguage)
     {
-        m_cursorXPixelPos +=  qCeil(textLayout.position().x() - m_horizScrollOffset);
+        m_cursorXPixelPos += qCeil(textLayout.position().x() - m_horizScrollOffset);
         hF = -1;
     }
     int cursorWidth = 5;
@@ -2611,7 +2615,7 @@ void MergeResultWindow::keyPressEvent(QKeyEvent* e)
     // TODO if width of current line exceeds the current maximum width then force recalculating the scrollbars
     if(textLayout.maximumWidth() > getMaxTextWidth())
     {
-        m_maxTextWidth =  qCeil(textLayout.maximumWidth());
+        m_maxTextWidth = qCeil(textLayout.maximumWidth());
         Q_EMIT resizeSignal();
     }
     if(!bYMoveKey)
@@ -2856,7 +2860,7 @@ void MergeResultWindow::pasteClipboard(bool bFromSelection)
     for(i = 0; i < len; ++i)
     {
         QChar c = clipBoard[i];
-        if(c == '\n' || (c == '\r' && clipBoard[i+1] != '\n'))
+        if(c == '\n' || (c == '\r' && clipBoard[i + 1] != '\n'))
         {
             melIt->setString(currentLine);
             MergeEditLine mel(mlIt->id3l); // Associate every mel with an id3l, even if not really valid.
@@ -3040,7 +3044,7 @@ void MergeResultWindow::setSelection(int firstLine, int startPos, int lastLine, 
     update();
 }
 
-WindowTitleWidget::WindowTitleWidget(const QSharedPointer<Options> &pOptions)
+WindowTitleWidget::WindowTitleWidget(const QSharedPointer<Options>& pOptions)
 {
     m_pOptions = pOptions;
     setAutoFillBackground(true);
@@ -3054,7 +3058,7 @@ WindowTitleWidget::WindowTitleWidget(const QSharedPointer<Options> &pOptions)
 
     m_pFileNameLineEdit = new FileNameLineEdit();
     pHLayout->addWidget(m_pFileNameLineEdit, 6);
-    m_pFileNameLineEdit->installEventFilter(this);//for focus tracking
+    m_pFileNameLineEdit->installEventFilter(this); //for focus tracking
     m_pFileNameLineEdit->setAcceptDrops(true);
     m_pFileNameLineEdit->setReadOnly(true);
 
@@ -3193,7 +3197,7 @@ void WindowTitleWidget::setEncodings(QTextCodec* pCodecForA, QTextCodec* pCodecF
     // First sort codec names:
     std::map<QString, QTextCodec*> names;
     QList<int> mibs = QTextCodec::availableMibs();
-    for(int i: mibs)
+    for(int i : mibs)
     {
         QTextCodec* c = QTextCodec::codecForMib(i);
         if(c != nullptr)

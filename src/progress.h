@@ -15,6 +15,7 @@
 #include <QElapsedTimer>
 #include <QList>
 #include <QPointer>
+#include <QThread>
 
 class KJob;
 class QEventLoop;
@@ -67,7 +68,6 @@ class ProgressDialog: public QDialog
     void delayedHideStatusBarWidget();
 
     void timerEvent(QTimerEvent* event) override;
-    void recalc(bool bUpdate);
 
   protected:
     void reject() override;
@@ -76,6 +76,10 @@ class ProgressDialog: public QDialog
     void setInformationImp(const QString& info);
     void setCurrentImp(qint64 subCurrent);
     void initConnections();
+
+    //Treated as slot by direct call to QMetaObject::invokeMethod
+  public Q_SLOTS:
+    void recalc(bool bUpdate);
 
   private Q_SLOTS:
     void delayedHide();
@@ -101,9 +105,9 @@ class ProgressDialog: public QDialog
     };
     QList<ProgressLevelData> m_progressStack;
 
-    int m_progressDelayTimer;
-    int m_delayedHideTimer;
-    int m_delayedHideStatusBarWidgetTimer;
+    int m_progressDelayTimer = 0;
+    int m_delayedHideTimer = 0;
+    int m_delayedHideStatusBarWidgetTimer = 0;
     QPointer<QEventLoop> m_eventLoop;
 
     QProgressBar* m_pProgressBar;
@@ -114,16 +118,16 @@ class ProgressDialog: public QDialog
     QPushButton* m_pAbortButton;
     QElapsedTimer m_t1;
     QElapsedTimer m_t2;
-    bool m_bWasCancelled;
-    e_CancelReason m_eCancelReason;
+    bool m_bWasCancelled = false;
+    e_CancelReason m_eCancelReason = eUserAbort;
     KJob* m_pJob = nullptr;
     QString m_currentJobInfo; // Needed if the job doesn't stop after a reasonable time.
-    bool m_bStayHidden;
-    QThread* m_pGuiThread;
+    bool m_bStayHidden = false;
+    QThread* m_pGuiThread = QThread::currentThread();
     QStatusBar* m_pStatusBar = nullptr; // status bar of main window (if exists)
     QWidget* m_pStatusBarWidget = nullptr;
-    QProgressBar* m_pStatusProgressBar;
-    QPushButton* m_pStatusAbortButton;
+    QProgressBar* m_pStatusProgressBar = nullptr;
+    QPushButton* m_pStatusAbortButton = nullptr;
     /*
         This list exists solely to auto disconnect boost signals.
     */

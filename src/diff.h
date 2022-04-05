@@ -143,7 +143,6 @@ class LineData
 {
   private:
     QSharedPointer<QString> mBuffer;
-    //QString pLine;
     QtSizeType mFirstNonWhiteChar = 0;
     //This tracks the offset with-in our unicode buffer not the file offset
     QtSizeType mOffset = 0;
@@ -173,7 +172,7 @@ class LineData
 
     Q_REQUIRED_RESULT inline QtSizeType getOffset() const { return mOffset; }
     Q_REQUIRED_RESULT int width(int tabSize) const; // Calcs width considering tabs.
-    //int occurrences;
+
     Q_REQUIRED_RESULT inline bool whiteLine() const { return mFirstNonWhiteChar == 0; }
 
     Q_REQUIRED_RESULT inline bool isPureComment() const { return bContainsPureComment; }
@@ -259,6 +258,22 @@ class Diff3Line
     [[nodiscard]] inline bool hasFineDiffBC() const { return pFineBC != nullptr; }
     [[nodiscard]] inline bool hasFineDiffCA() const { return pFineCA != nullptr; }
 
+    [[nodiscard]] inline LineRef getLineIndex(e_SrcSelector src) const
+    {
+        switch(src)
+        {
+            case e_SrcSelector::A:
+                return getLineA();
+            case e_SrcSelector::B:
+                return getLineB();
+            case e_SrcSelector::C:
+                return getLineC();
+            default:
+                assert(false);
+                return LineRef::invalid;
+        }
+    }
+
     Q_REQUIRED_RESULT LineRef getLineA() const { return lineA; }
     Q_REQUIRED_RESULT LineRef getLineB() const { return lineB; }
     Q_REQUIRED_RESULT LineRef getLineC() const { return lineC; }
@@ -327,7 +342,7 @@ class Diff3Line
     void setLinesNeeded(const qint32 lines) { mLinesNeededForDisplay = lines; }
     Q_REQUIRED_RESULT bool fineDiff(bool bTextsTotalEqual, const e_SrcSelector selector, const std::shared_ptr<LineDataVector> &v1, const std::shared_ptr<LineDataVector> &v2, const IgnoreFlags eIgnoreFlags);
     void getLineInfo(const e_SrcSelector winIdx, const bool isTriple, LineRef& lineIdx,
-                     DiffList*& pFineDiff1, DiffList*& pFineDiff2, // return values
+                     std::shared_ptr<DiffList>& pFineDiff1, std::shared_ptr<DiffList>& pFineDiff2, // return values
                      ChangeFlags& changed, ChangeFlags& changed2) const;
 
   private:
@@ -497,6 +512,26 @@ class ManualDiffHelpEntry
     LineRef lineC2;
 
   public:
+    ManualDiffHelpEntry() = default;
+    ManualDiffHelpEntry(e_SrcSelector winIdx, LineRef firstLine, LineRef lastLine)
+    {
+        if(winIdx == e_SrcSelector::A)
+        {
+            lineA1 = firstLine;
+            lineA2 = lastLine;
+        }
+        else if(winIdx == e_SrcSelector::B)
+        {
+            lineB1 = firstLine;
+            lineB2 = lastLine;
+        }
+        else
+        {
+            lineC1 = firstLine;
+            lineC2 = lastLine;
+        }
+    }
+
     LineRef& firstLine(e_SrcSelector winIdx)
     {
         return winIdx == e_SrcSelector::A ? lineA1 : (winIdx == e_SrcSelector::B ? lineB1 : lineC1);

@@ -15,13 +15,13 @@
 #include "FileAccessJobHandler.h"
 #include "IgnoreList.h"
 #include "Logging.h"
+#include "ProgressProxy.h"
 #include "Utils.h"
-#include "progress.h"
 
 #include <algorithm>                      // for min
 #include <cstdlib>
 #include <sys/stat.h>
-//#include <sys/types.h>
+
 #ifndef Q_OS_WIN
 #include <unistd.h>
 #endif

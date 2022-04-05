@@ -16,6 +16,11 @@ set(QT_MIN_VERSION "5.12.0")
 
 set(KF5_MIN_VERSION "5.50.0")
 
+if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.2)
+    message(WARNING "gcc < 8.2 is not recomended support is best effort-only.")
+endif()
+
+
 find_package(ECM ${ECM_MIN_VERSION} CONFIG REQUIRED)
 set(
     CMAKE_MODULE_PATH
@@ -88,7 +93,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CLANG_WARNING_FLAGS "-Wno-undef -Wno-trigraphs -Wno-invalid-pp-token -Wno-comment -Wshorten-64-to-32 -Wstring-conversion -Wc++11-narrowing -fstack-protector-all")
     set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${CLANG_WARNING_FLAGS}")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    #Make MSVC obey standard exception C++ handling by destroying all objects going out of scope as a result of the exception.
+    #Make MSVC obey standard C++ exception handling by destroying all objects going out of scope as a result of the exception.
     #This also separates a Microsoft specific exention SEH which catches non-c++ asynchronous exceptions.
     add_compile_options("/EHsc")
     #Suppress MSVCs min/max macros
@@ -96,9 +101,6 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     #Suppress Microsoft specfic C4996 "deprecatation" warnings. Not helpful for code intended to run on any other platform.
     add_definitions(-D_CRT_NONSTDC_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS_GLOBALS)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.0)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fstack-check")
-    endif()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-trigraphs -Wduplicated-cond -Wduplicated-branches -Wshadow -fexceptions")
 endif()
 
@@ -147,7 +149,7 @@ if(KF5DocTools_FOUND)
     add_subdirectory(doc)
     kdoctools_install(po)
 else()
-    message(WARNING "DocTools not found.")
+    message(WARNING "DocTools not found. Docs will not be generated.")
 endif()
 
 ki18n_install(po)

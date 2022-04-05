@@ -1400,7 +1400,7 @@ void MergeResultWindow::timerEvent(QTimerEvent*)
     }
 }
 
-QVector<QTextLayout::FormatRange> MergeResultWindow::getTextLayoutForLine(int line, const QString& str, QTextLayout& textLayout)
+QVector<QTextLayout::FormatRange> MergeResultWindow::getTextLayoutForLine(LineRef line, const QString& str, QTextLayout& textLayout)
 {
     // tabs
     QTextOption textOption;
@@ -1736,12 +1736,12 @@ void MergeResultWindow::focusInEvent(QFocusEvent* e)
 LineRef MergeResultWindow::convertToLine(int y)
 {
     const QFontMetrics& fm = fontMetrics();
-    int fontHeight = fm.lineSpacing();
-    int topLineYOffset = 0;
+    const int fontHeight = fm.lineSpacing();
+    constexpr int topLineYOffset = 0;
 
     int yOffset = topLineYOffset - m_firstLine * fontHeight;
 
-    LineRef line = std::min((y - yOffset) / fontHeight, m_nofLines - 1);
+    const LineRef line = std::min((y - yOffset) / fontHeight, m_nofLines - 1);
     return line;
 }
 
@@ -1749,24 +1749,24 @@ void MergeResultWindow::mousePressEvent(QMouseEvent* e)
 {
     m_bCursorOn = true;
 
-    int xOffset = getTextXOffset();
+    const int xOffset = getTextXOffset();
 
-    LineRef line = convertToLine(e->y());
-    QString s = getString(line);
+    const LineRef line = std::max<LineRef::LineType>(convertToLine(e->y()), 0);
+    const QString s = getString(line);
     QTextLayout textLayout(s, font(), this);
     getTextLayoutForLine(line, s, textLayout);
     QtNumberType pos = textLayout.lineAt(0).xToCursor(e->x() - textLayout.position().x());
 
-    bool lLeftMouseButton = e->button() == Qt::LeftButton;
-    bool lMiddleMouseButton = e->button() == Qt::MiddleButton;
-    bool lRightMouseButton = e->button() == Qt::RightButton;
+    const bool lLeftMouseButton = e->button() == Qt::LeftButton;
+    const bool lMiddleMouseButton = e->button() == Qt::MiddleButton;
+    const bool lRightMouseButton = e->button() == Qt::RightButton;
 
     if((lLeftMouseButton && (e->x() < xOffset)) || lRightMouseButton) // Fast range selection
     {
         m_cursorXPos = 0;
         m_cursorOldXPixelPos = 0;
-        m_cursorYPos = std::max((LineRef::LineType)line, 0);
-        int l = 0;
+        m_cursorYPos = line;
+        LineCount l = 0;
         MergeLineListImp::iterator i = m_mergeLineList.list().begin();
         for(i = m_mergeLineList.list().begin(); i != m_mergeLineList.list().end(); ++i)
         {
@@ -1790,7 +1790,6 @@ void MergeResultWindow::mousePressEvent(QMouseEvent* e)
     else if(lLeftMouseButton) // Normal cursor placement
     {
         pos = std::max(pos, 0);
-        line = std::max((LineRef::LineType)line, 0);
         if(e->QInputEvent::modifiers() & Qt::ShiftModifier)
         {
             if(!m_selection.isValidFirstLine())
@@ -1812,12 +1811,10 @@ void MergeResultWindow::mousePressEvent(QMouseEvent* e)
         m_cursorYPos = line;
 
         update();
-        //showStatusLine( line, m_winIdx, m_pFilename, m_pDiff3LineList, m_pStatusBar );
     }
     else if(lMiddleMouseButton) // Paste clipboard
     {
         pos = std::max(pos, 0);
-        line = std::max((LineRef::LineType)line, 0);
 
         m_selection.reset();
         m_cursorXPos = pos;
@@ -1832,18 +1829,18 @@ void MergeResultWindow::mouseDoubleClickEvent(QMouseEvent* e)
 {
     if(e->button() == Qt::LeftButton)
     {
-        LineRef line = convertToLine(e->y());
-        QString s = getString(line);
+        const LineRef line = convertToLine(e->y());
+        const QString s = getString(line);
         QTextLayout textLayout(s, font(), this);
         getTextLayoutForLine(line, s, textLayout);
-        int pos = textLayout.lineAt(0).xToCursor(e->x() - textLayout.position().x());
+        QtNumberType pos = textLayout.lineAt(0).xToCursor(e->x() - textLayout.position().x());
         m_cursorXPos = pos;
         m_cursorOldXPixelPos = m_cursorXPixelPos;
         m_cursorYPos = line;
 
         if(!s.isEmpty())
         {
-            int pos1, pos2;
+            QtSizeType pos1, pos2;
 
             Utils::calcTokenPos(s, pos, pos1, pos2);
 
@@ -1878,11 +1875,11 @@ void MergeResultWindow::mouseReleaseEvent(QMouseEvent* e)
 
 void MergeResultWindow::mouseMoveEvent(QMouseEvent* e)
 {
-    LineRef line = convertToLine(e->y());
-    QString s = getString(line);
+    const LineRef line = convertToLine(e->y());
+    const QString s = getString(line);
     QTextLayout textLayout(s, font(), this);
     getTextLayoutForLine(line, s, textLayout);
-    int pos = textLayout.lineAt(0).xToCursor(e->x() - textLayout.position().x());
+    const int pos = textLayout.lineAt(0).xToCursor(e->x() - textLayout.position().x());
     m_cursorXPos = pos;
     m_cursorOldXPixelPos = m_cursorXPixelPos;
     m_cursorYPos = line;
@@ -1891,12 +1888,10 @@ void MergeResultWindow::mouseMoveEvent(QMouseEvent* e)
         m_selection.end(line, pos);
         myUpdate(0);
 
-        //showStatusLine( line, m_winIdx, m_pFilename, m_pDiff3LineList, m_pStatusBar );
-
         // Scroll because mouse moved out of the window
         const QFontMetrics& fm = fontMetrics();
-        int fontWidth = Utils::getHorizontalAdvance(fm, '0');
-        int topLineYOffset = 0;
+        const int fontWidth = Utils::getHorizontalAdvance(fm, '0');
+        constexpr int topLineYOffset = 0;
         int deltaX = 0;
         int deltaY = 0;
         if(!m_pOptions->m_bRightToLeftLanguage)
@@ -1930,7 +1925,7 @@ void MergeResultWindow::slotCursorUpdate()
         m_bCursorUpdate = true;
 
         const QFontMetrics& fm = fontMetrics();
-        int topLineYOffset = 0;
+        constexpr int topLineYOffset = 0;
         int yOffset = (m_cursorYPos - m_firstLine) * fm.lineSpacing() + topLineYOffset;
 
         repaint(0, yOffset, width(), fm.lineSpacing() + 2);
@@ -1943,7 +1938,7 @@ void MergeResultWindow::slotCursorUpdate()
 
 void MergeResultWindow::wheelEvent(QWheelEvent* pWheelEvent)
 {
-    QPoint delta = pWheelEvent->angleDelta();
+    const QPoint delta = pWheelEvent->angleDelta();
     //Block diagonal scrolling easily generated unintentionally with track pads.
     if(delta.y() != 0 && abs(delta.y()) > abs(delta.x()) && mVScrollBar != nullptr)
     {
@@ -1966,6 +1961,7 @@ bool MergeResultWindow::event(QEvent* e)
     }
     return QWidget::event(e);
 }
+
 void MergeResultWindow::keyPressEvent(QKeyEvent* e)
 {
     QtNumberType y = m_cursorYPos;
@@ -2000,7 +1996,6 @@ void MergeResultWindow::keyPressEvent(QKeyEvent* e)
     switch(e->key())
     {
         case Qt::Key_Escape:
-        //case Qt::Key_Tab:
         case Qt::Key_Backtab:
             break;
         case Qt::Key_Delete: {

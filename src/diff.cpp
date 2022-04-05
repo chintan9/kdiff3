@@ -516,15 +516,13 @@ void ManualDiffHelpList::insertEntry(e_SrcSelector winIdx, LineRef firstLine, Li
     // First insert the new item without regarding compactness.
     // If the new item overlaps with previous items then the previous items will be removed.
 
-    ManualDiffHelpEntry mdhe;
-    mdhe.firstLine(winIdx) = firstLine;
-    mdhe.lastLine(winIdx) = lastLine;
+    ManualDiffHelpEntry mdhe(winIdx, firstLine, lastLine);
 
     ManualDiffHelpList::iterator i;
     for(i = begin(); i != end(); ++i)
     {
-        LineRef& l1 = i->firstLine(winIdx);
-        LineRef& l2 = i->lastLine(winIdx);
+        LineRef l1 = i->firstLine(winIdx);
+        LineRef l2 = i->lastLine(winIdx);
         if(l1.isValid() && l2.isValid())
         {
             if((firstLine <= l1 && lastLine >= l1) || (firstLine <= l2 && lastLine >= l2))
@@ -1375,8 +1373,10 @@ void DiffList::calcDiff(const QString& line1, const QString& line2, const int ma
 
     assert(size() * sizeof(Diff) + sizeof(DiffList) <= (50 << 20));
 
+#ifndef NDEBUG
     // Verify difflist
     {
+
         qint32 l1 = 0;
         qint32 l2 = 0;
 
@@ -1388,6 +1388,7 @@ void DiffList::calcDiff(const QString& line1, const QString& line2, const int ma
 
         assert(l1 == line1.size() && l2 == line2.size());
     }
+#endif // !NDEBUG
 }
 
 bool Diff3Line::fineDiff(bool inBTextsTotalEqual, const e_SrcSelector selector, const std::shared_ptr<LineDataVector> &v1, const std::shared_ptr<LineDataVector> &v2, const IgnoreFlags eIgnoreFlags)
@@ -1475,7 +1476,7 @@ bool Diff3Line::fineDiff(bool inBTextsTotalEqual, const e_SrcSelector selector, 
 }
 
 void Diff3Line::getLineInfo(const e_SrcSelector winIdx, const bool isTriple, LineRef& lineIdx,
-                            DiffList*& pFineDiff1, DiffList*& pFineDiff2, // return values
+                            std::shared_ptr<DiffList>& pFineDiff1, std::shared_ptr<DiffList>& pFineDiff2, // return values
                             ChangeFlags& changed, ChangeFlags& changed2) const
 {
     changed = NoChange;
@@ -1488,8 +1489,8 @@ void Diff3Line::getLineInfo(const e_SrcSelector winIdx, const bool isTriple, Lin
     if(winIdx == e_SrcSelector::A)
     {
         lineIdx = getLineA();
-        pFineDiff1 = pFineAB.get();
-        pFineDiff2 = pFineCA.get();
+        pFineDiff1 = pFineAB;
+        pFineDiff2 = pFineCA;
 
         changed = ((!getLineB().isValid()) != (!lineIdx.isValid()) ? AChanged : NoChange) |
                    ((!getLineC().isValid()) != (!lineIdx.isValid()) && isTriple ? BChanged : NoChange);
@@ -1498,8 +1499,8 @@ void Diff3Line::getLineInfo(const e_SrcSelector winIdx, const bool isTriple, Lin
     else if(winIdx == e_SrcSelector::B)
     {
         lineIdx = getLineB();
-        pFineDiff1 = pFineBC.get();
-        pFineDiff2 = pFineAB.get();
+        pFineDiff1 = pFineBC;
+        pFineDiff2 = pFineAB;
         changed = ((!getLineC().isValid()) != (!lineIdx.isValid()) && isTriple ? AChanged : NoChange) |
                    ((!getLineA().isValid()) != (!lineIdx.isValid()) ? BChanged : NoChange);
         changed2 = (bBEqualC || !isTriple ? NoChange : AChanged) | (bAEqualB ? NoChange : BChanged);
@@ -1507,8 +1508,8 @@ void Diff3Line::getLineInfo(const e_SrcSelector winIdx, const bool isTriple, Lin
     else if(winIdx == e_SrcSelector::C)
     {
         lineIdx = getLineC();
-        pFineDiff1 = pFineCA.get();
-        pFineDiff2 = pFineBC.get();
+        pFineDiff1 = pFineCA;
+        pFineDiff2 = pFineBC;
         changed = ((!getLineA().isValid()) != (!lineIdx.isValid()) ? AChanged : NoChange) |
                    ((!getLineB().isValid()) != (!lineIdx.isValid()) ? BChanged : NoChange);
         changed2 = (bAEqualC ? NoChange : AChanged) | (bBEqualC ? NoChange : BChanged);

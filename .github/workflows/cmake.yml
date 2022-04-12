@@ -46,6 +46,8 @@ jobs:
       run: |
         set(cmake_version $ENV{CMAKE_VERSION})
         set(ninja_version $ENV{NINJA_VERSION})
+        find_package(ECM REQUIRED NO_MODULE)
+        set(CMAKE_MODULE_PATH ${ECM_MODULE_DIR})
 
         message(STATUS "Using host CMake version: ${CMAKE_VERSION}")
 

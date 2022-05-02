@@ -34,6 +34,7 @@ jobs:
       with:
         submodule_update: ON
         create_package: ON
+        package_generator: TGZ
         
     - uses: actions/upload-artifact@v2
       with:

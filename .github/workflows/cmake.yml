@@ -24,3 +24,9 @@ jobs:
     
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
+    - name: Build project
+      uses: nicledomaS/cmake_build_action@v1.4
+      with:
+        submodule_update: ON
+        run_tests: ON
+        unit_test_build: -Dtest=ON

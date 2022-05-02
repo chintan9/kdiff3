@@ -33,6 +33,9 @@ jobs:
       uses: nicledomaS/cmake_build_action@v1.4
       with:
         submodule_update: ON
-      
-    - name: Build
-      run: cmake --build ./build --config Release
+        create_package: ON
+        
+    - uses: actions/upload-artifact@v2
+      with:
+        path: build/*.tar.gz
+        name: artifact_${{ matrix.os }}_${{ matrix.configs }}.tar.gz

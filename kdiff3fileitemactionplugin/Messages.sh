@@ -1,2 +1,2 @@
 #! /usr/bin/env bash
-$XGETTEXT *.cpp -o $podir/kdiff3fileitemactionplugin.pot
+$XGETTEXT *.cpp -o "$podir"/kdiff3fileitemactionplugin.pot

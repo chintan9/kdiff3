@@ -28,7 +28,8 @@ class EncodedDataStream: public QDataStream
 
     void setGenerateByteOrderMark(bool generate) { mGenerateBOM = generate; }
 
-    //Let the compiler choose the optimal solution based on c++ rules.
+    inline bool hasBOM() const noexcept { return mGenerateBOM; }
+
     inline void setEncoding(const QByteArray &inEncoding) noexcept
     {
         assert(!inEncoding.isEmpty());
@@ -39,24 +40,11 @@ class EncodedDataStream: public QDataStream
         }
         else
         {
-            mGenerateBOM = inEncoding != "UTF-16" && inEncoding != "UTF-32";
+            mGenerateBOM = inEncoding.startsWith("UTF-16") || inEncoding.startsWith("UTF-32");
             mEncoding = inEncoding;
         }
-    };
 
-    inline void setEncoding(const QByteArray &&inEncoding) noexcept
-    {
-        assert(!inEncoding.isEmpty());
-        if(inEncoding == "UTF-8-BOM")
-        {
-            mGenerateBOM = true;
-            mEncoding = "UTF-8";
-        }
-        else
-        {
-            mGenerateBOM =  inEncoding != "UTF-16" && inEncoding != "UTF-32";
-            mEncoding = inEncoding;
-        }
+        assert(!mGenerateBOM || ((inEncoding.startsWith("UTF-16") || inEncoding.startsWith("UTF-32")) || inEncoding == "UTF-8-BOM"));
     };
 
     inline qint32 readChar(QChar& c)

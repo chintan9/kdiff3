@@ -4,11 +4,7 @@
 
 #cmake < 3.1 has no sane way of checking C++11 features and needed flags
 #CMP0077 is defined in 3.13 or later
-cmake_minimum_required(VERSION 3.22...3.29 FATAL_ERROR)
-if(POLICY CMP0167)
-    #compatibailty shim remove when craft build issues are resolved
-    cmake_policy(SET CMP0167 OLD)
-endif()
+cmake_minimum_required(VERSION 3.22...3.30 FATAL_ERROR)
 
 project(kdiff3 VERSION 1.11.70)
 
@@ -31,7 +27,7 @@ set(
 )
 
 set(QT_MAJOR_VERSION "6")
-set(QT_MIN_VERSION "6.6.0")
+set(QT_MIN_VERSION "6.7.0")
 
 set(KF_MAJOR_VERSION "6")
 
@@ -70,6 +66,8 @@ ecm_setup_version(${PROJECT_VERSION} VARIABLE_PREFIX KDIFF3 VERSION_HEADER ${CMA
 find_package(Boost 1.82 REQUIRED)
 #needed on craft and possiablely other custom setups.
 include_directories(${Boost_INCLUDE_DIRS})
+
+find_package(ICU 70.0 COMPONENTS uc i18n REQUIRED)
 
 find_package(
     Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION}

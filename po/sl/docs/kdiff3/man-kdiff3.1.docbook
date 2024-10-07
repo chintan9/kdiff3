@@ -1,22 +1,22 @@
 <?xml version="1.0" ?>
 <!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-<!ENTITY % Spanish "INCLUDE">
+<!ENTITY % Slovenian "INCLUDE">
 ]>
 
 <refentry lang="&language;">
 <refentryinfo>
 <title
->Manual del usuario de KDiff3</title>
+>Uporabniški priročnik KDiff3</title>
 <author
 ><firstname
 >Burkhard</firstname
 ><surname
 >Lueck</surname
 > <contrib
->Página man de KDiff3.</contrib
+>KDiff3 man page.</contrib
 > &Burkhard.Lueck.mail; </author>
 <date
->2019-02-22</date>
+>22.02.2019</date>
 <releaseinfo
 >kdiff3 1.8</releaseinfo>
 </refentryinfo>
@@ -36,7 +36,7 @@
 >kdiff3</command
 ></refname>
 <refpurpose
->Herramienta para comparar y fusionar archivos y carpetas</refpurpose>
+>Orodje za primerjavo in spajanje datotek in map</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
@@ -73,13 +73,13 @@
 ><option
 >-o, --output</option
 > <replaceable
->archivo</replaceable
+>file</replaceable
 ></arg
 > <arg choice="opt"
 ><option
 >--out</option
 > <replaceable
->archivo</replaceable
+>file</replaceable
 ></arg
 > <arg choice="opt"
 ><option
@@ -117,7 +117,7 @@
 ><option
 >--cs</option
 > <replaceable
->texto</replaceable
+>string</replaceable
 ></arg
 > <arg choice="opt"
 ><option
@@ -127,24 +127,24 @@
 ><option
 >--config</option
 > <replaceable
->archivo</replaceable
+>file</replaceable
 ></arg
 > <arg choice="opt"
 ><option
 ><replaceable
->Archivo1</replaceable
+>File1</replaceable
 ></option
 ></arg
 > <arg choice="opt"
 ><option
 ><replaceable
->Archivo2</replaceable
+>File2</replaceable
 ></option
 ></arg
 > <arg choice="opt"
 ><option
 ><replaceable
->Archivo3</replaceable
+>File3</replaceable
 ></option
 ></arg
 > </cmdsynopsis>
@@ -152,15 +152,15 @@
 
 <refsect1>
 <title
->Descripción</title>
+>Opis</title>
 <para
->Compara dos o tres archivos o carpetas de entrada.</para>
+>Primerja dve ali tri vhodne datoteke ali mape.</para>
 
 </refsect1>
 
 <refsect1>
 <title
->Opciones</title>
+>Možnosti</title>
 <variablelist>
 <varlistentry>
 <term
@@ -169,7 +169,7 @@
 ></term>
 <listitem
 ><para
->Ignorado (definido por el usuario). </para
+>Prezrto. (Uporabniško določeno.) </para
 ></listitem>
 </varlistentry>
 
@@ -180,7 +180,7 @@
 ></term>
 <listitem
 ><para
->Ignorado (definido por el usuario). </para
+>Prezrto. (Uporabniško določeno.) </para
 ></listitem>
 </varlistentry>
 
@@ -191,7 +191,7 @@
 ></term>
 <listitem
 ><para
->Ignorado (definido por el usuario). </para
+>Prezrto. (Uporabniško določeno.) </para
 ></listitem>
 </varlistentry>
 
@@ -202,7 +202,7 @@
 ></term>
 <listitem
 ><para
->Ignorado (definido por el usuario). </para
+>Prezrto. (Uporabniško določeno.) </para
 ></listitem>
 </varlistentry>
 
@@ -213,7 +213,7 @@
 ></term>
 <listitem
 ><para
->Fusionar la entrada. </para
+>Združi vnos. </para
 ></listitem>
 </varlistentry>
 
@@ -222,11 +222,11 @@
 ><option
 >-b, --base</option
 > <replaceable
->archivo</replaceable
+>datoteka</replaceable
 ></term>
 <listitem
 ><para
->Archivo base explícito (para compatibilidad con otras herramientas). </para
+>Eksplicitna osnovna datoteka. Zaradi združljivosti z določenimi orodji. </para
 ></listitem>
 </varlistentry>
 
@@ -235,11 +235,11 @@
 ><option
 >-o, --output</option
 > <replaceable
->archivo</replaceable
+>datoteka</replaceable
 ></term>
 <listitem
 ><para
->Archivo de salida. Implica -m. Por ejemplo: -o archivonuevo.txt </para
+>Izhodna datoteka. Pomeni -m. &eg;: -o novadatoteka.txt </para
 ></listitem>
 </varlistentry>
 
@@ -248,11 +248,11 @@
 ><option
 >--out</option
 > <replaceable
->archivo</replaceable
+>datoteka</replaceable
 ></term>
 <listitem
 ><para
->Archivo de salida, también (para compatibilidad con otras herramientas). </para
+>Spet izhodna datoteka. (Zaradi združljivosti z določenimi orodji.) </para
 ></listitem>
 </varlistentry>
 
@@ -263,11 +263,11 @@
 ></term>
 <listitem
 ><para
->No mostrar la interfaz gráfica si todos los conflictos se pueden resolver automáticamente (necesita <option
+>Brez grafičnega uporabniškega vmesnika, če so vsi konflikti samodejno rešljivi. (Potrebuje <option
 >-o</option
 > <replaceable
->archivo</replaceable
->). </para
+>datoteka</replaceable
+>) </para
 ></listitem>
 </varlistentry>
 
@@ -278,7 +278,7 @@
 ></term>
 <listitem
 ><para
->Ignorar --auto y mostrar siempre la interfaz gráfica del usuario. </para
+>Prezri --auto in vedno prikaži grafični uporabniški vmesnik. </para
 ></listitem>
 </varlistentry>
 
@@ -291,7 +291,7 @@
 ></term>
 <listitem
 ><para
->Sustituto de nombre visible para el archivo de entrada 1 (base). </para
+>Vidna zamenjava imena za vhodno datoteko 1 (osnovno). </para
 ></listitem>
 </varlistentry>
 
@@ -304,7 +304,7 @@
 ></term>
 <listitem
 ><para
->Sustituto de nombre visible para el archivo de entrada 2. </para
+>Vidna zamenjava imena za vhodno datoteko 2. </para
 ></listitem>
 </varlistentry>
 
@@ -317,7 +317,7 @@
 ></term>
 <listitem
 ><para
->Sustituto de nombre visible para el archivo de entrada 3. </para
+>Vidna zamenjava imena za vhodno datoteko 3. </para
 ></listitem>
 </varlistentry>
 
@@ -330,7 +330,7 @@
 ></term>
 <listitem
 ><para
->Sustituto alternativo de nombre visible. Debe introducirse una vez para cada entrada. </para
+>Alternativna vidna zamenjava imena. To navedite po enkrat za vsak vnos.​ </para
 ></listitem>
 </varlistentry>
 
@@ -339,11 +339,11 @@
 ><option
 >--cs</option
 > <replaceable
->texto</replaceable
+>string</replaceable
 ></term>
 <listitem
 ><para
->Usar este valor en lugar de una preferencia de configuración. Debe usarlo una vez para cada preferencia. Por ejemplo: <option
+>Preglasi nastavitev konfiguracije. Uporabite po enkrat za vsako nastavitev. &eg;: <option
 >--cs</option
 > <replaceable
 >AutoAdvance=1</replaceable
@@ -358,7 +358,7 @@
 ></term>
 <listitem
 ><para
->Mostrar una lista de las preferencias de configuración y sus valores actuales. </para
+>Pokaže seznam nastavitev konfiguracije in trenutnih vrednosti. </para
 ></listitem>
 </varlistentry>
 
@@ -367,11 +367,11 @@
 ><option
 >--config</option
 > <replaceable
->archivo</replaceable
+>datoteka</replaceable
 ></term>
 <listitem
 ><para
->Usar un archivo de configuración diferente. </para
+>Uporabi drugo datoteko config. </para
 ></listitem>
 </varlistentry>
 
@@ -379,14 +379,14 @@
 <term
 ><option
 ><replaceable
->Archivo1</replaceable
+>Datoteka1</replaceable
 ></option
 ></term>
 <listitem
 ><para
->archivo1 a abrir (base, si no se indica usando --<option
+>datoteka1 za odpiranje (osnova, če ni podana prek --<option
 >base</option
->). </para
+>) </para
 ></listitem>
 </varlistentry>
 
@@ -394,12 +394,12 @@
 <term
 ><option
 ><replaceable
->Archivo2</replaceable
+>Datoteka2</replaceable
 ></option
 ></term>
 <listitem
 ><para
->archivo2 a abrir. </para
+>datoteka2 za odpiranje </para
 ></listitem>
 </varlistentry>
 
@@ -407,12 +407,12 @@
 <term
 ><option
 ><replaceable
->Archivo3</replaceable
+>Datoteka3</replaceable
 ></option
 ></term>
 <listitem
 ><para
->archivo3 a abrir. </para
+>datoteka3 za odpiranje </para
 ></listitem>
 </varlistentry>
 
@@ -422,12 +422,12 @@
 
 <refsect1>
 <title
->Consulte también</title>
+>Glejte tudi</title>
 <simplelist>
 <member
->Dispone de documentación de usuario más detallada usando <ulink url="help:/kdiff3"
+>Podrobnejša uporabniška dokumentacija je na voljo na <ulink url="help:/kdiff3"
 >help:/kdiff3</ulink
-> (introduzca esta &URL; en &konqueror; o ejecute <userinput
+> (vnesite bodisi to &URL; v &konqueror;, ali zaženite <userinput
 ><command
 >khelpcenter</command
 > <parameter
@@ -443,9 +443,9 @@
 
 <refsect1>
 <title
->Autores</title>
+>Avtorji</title>
 <para
->Esta página de manual fue escrita por &Burkhard.Lueck; &Burkhard.Lueck.mail;.</para>
+>To stran priročnika je napisal &Burkhard.Lueck; &Burkhard.Lueck.mail;.</para>
 </refsect1>
 
 </refentry>

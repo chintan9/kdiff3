@@ -358,10 +358,6 @@ void SourceData::readAndPreprocess(const char* encoding, bool bAutoDetect)
 
             fileNameIn1 = m_tempInputFileName;
         }
-        if(bAutoDetect)
-        {
-            mEncoding = detectEncoding(fileNameIn1).value_or(encoding);
-        }
     }
     else // The input was set via setData(), probably from clipboard.
     {
@@ -373,6 +369,12 @@ void SourceData::readAndPreprocess(const char* encoding, bool bAutoDetect)
         fileNameIn1 = m_tempInputFileName;
         mEncoding = "UTF-8";
     }
+
+    if(bAutoDetect)
+    {
+        mEncoding = detectEncoding(fileNameIn1).value_or(encoding);
+    }
+
     QByteArray pEncoding1 = getEncoding();
     QByteArray pEncoding2 = getEncoding();
     const QString overSizedFile = i18nc("Error message. %1 = filepath", "File %1 too large to process. Skipping.", fileNameIn1);
@@ -579,8 +581,6 @@ bool SourceData::FileData::preprocess(const QByteArray& encoding, bool removeCom
     m_eLineEndStyle = eLineEndStyleUndefined;
 
     QByteArray pCodec = detectEncoding(m_pBuf.get(), mDataSize, skipBytes).value_or(encoding);
-    if(pCodec != encoding)
-        skipBytes = 0;
 
     if(mDataSize - skipBytes > limits<qint32>::max())
     {
@@ -593,13 +593,12 @@ bool SourceData::FileData::preprocess(const QByteArray& encoding, bool removeCom
         const QByteArray ba = QByteArray::fromRawData(m_pBuf.get() + skipBytes, (qsizetype)(mDataSize - skipBytes));
         EncodedDataStream ds(ba);
 
-        mHasBOM = skipBytes != 0;
         ds.setEncoding(encoding);
-        ds.setGenerateByteOrderMark(skipBytes != 0);
-
+        mHasBOM = ds.hasBOM();
         m_bIncompleteConversion = false;
         m_unicodeBuf->clear();
 
+        assert(mHasBOM == skipBytes > 0);
         assert(m_unicodeBuf->length() == 0);
 
         mHasEOLTermination = false;
